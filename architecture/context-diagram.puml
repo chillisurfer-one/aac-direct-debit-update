@@ -1,0 +1,12 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(customer, "Bank Customer")
+System(webApp, "Bank Internet Banking App")
+System(dduService, "Direct Debit Update Service")
+System_Ext(thoughtMachine, "Thought Machine Core Banking")
+
+Rel(customer, webApp, "Requests direct debit change")
+Rel(webApp, dduService, "Submits update")
+Rel(dduService, thoughtMachine, "Updates mandate", "HTTPS + mTLS")
+@enduml
