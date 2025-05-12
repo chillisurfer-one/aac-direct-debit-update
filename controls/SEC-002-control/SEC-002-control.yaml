@@ -1,0 +1,12 @@
+id: SEC-002
+title: No @PermitAll or unsecured /api/** paths
+description: Avoid exposing unsecured public endpoints in Spring Security configuration.
+policy: policies/security/SEC-002-no-permit-all.rego
+input_source: controls/SEC-002/input/spring_security.json
+severity: high
+enforcement: hard
+stage: api_scan
+tags:
+- security
+- spring
+- access-control

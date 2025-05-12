@@ -1,0 +1,14 @@
+id: INFRA-004
+title: Secrets Manager must store DB and API credentials
+description: Ensure sensitive credentials are not stored in plain text or environment
+  variables.
+policy: policies/infrastructure/INFRA-004-secrets-manager.rego
+input_source: infra_controls/INFRA-004/input/terraform.json
+severity: high
+enforcement: hard
+stage: deploy
+tags:
+- infrastructure
+- secrets
+- aws
+- security

@@ -1,0 +1,8 @@
+{
+  "spring_security": {
+    "oauth2": {
+      "enabled": true,
+      "validate_tokens": false
+    }
+  }
+}

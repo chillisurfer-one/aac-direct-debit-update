@@ -1,0 +1,13 @@
+id: SEC-001
+title: All REST endpoints must require authentication
+description: Prevents exposure of unsecured endpoints by requiring all OpenAPI paths
+  to declare authentication requirements.
+policy: policies/security/SEC-001-auth-required.rego
+input_source: controls/SEC-001/input/openapi.json
+severity: high
+enforcement: hard
+stage: api_scan
+tags:
+- security
+- rest
+- authentication

@@ -1,0 +1,12 @@
+id: SEC-006
+title: Cross-Origin Resource Sharing (CORS) must be restricted
+description: Avoid using wildcard CORS origins to prevent security vulnerabilities.
+policy: policies/security/SEC-006-cors-restriction.rego
+input_source: controls/SEC-006/input/cors_config.json
+severity: high
+enforcement: hard
+stage: build
+tags:
+- security
+- cors
+- http

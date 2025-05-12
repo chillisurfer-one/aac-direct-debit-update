@@ -1,0 +1,103 @@
+@startuml DirectDebitMandateClassDiagram
+' === Diagram Type & Styling ===
+' Using standard PlantUML class diagram mode
+' with C4-inspired layering and annotations
+
+skinparam class {
+  BackgroundColor White
+  ArrowColor #4A90E2
+  BorderColor Black
+  FontName Consolas
+}
+skinparam backgroundColor #F9F9F9
+skinparam shadowing true
+
+title Direct Debit Mandate Update Microservice - Class View
+
+' === Legend ===
+legend top left
+|= Tag |= Meaning |
+| <<controller>> | Spring Boot REST Controller |
+| <<service>>    | Business Logic Service |
+| <<interface>>  | External or Adapter Client |
+| <<repository>> | Data persistence layer |
+endlegend
+
+' === API Layer ===
+package "API Layer" {
+  class MandateUpdateController <<controller>> {
+    +updateMandate(request: MandateUpdateRequestDTO): MandateUpdateResultDTO
+  }
+
+  class MandateUpdateRequestDTO {
+    -sortCode: String
+    -accountNumber: String
+    -mandateId: String
+  }
+
+  class MandateUpdateResultDTO {
+    -status: String
+    -message: String
+  }
+
+  MandateUpdateController --> MandateUpdateRequestDTO : uses
+  MandateUpdateController --> MandateUpdateResultDTO : returns
+}
+
+' === Service Layer ===
+package "Service Layer" {
+  interface MandateUpdateService <<service>> {
+    +processMandateUpdate(request: MandateUpdateRequestDTO): MandateUpdateResultDTO
+  }
+
+  class MandateUpdateServiceImpl <<service>> {
+    +processMandateUpdate(request: MandateUpdateRequestDTO): MandateUpdateResultDTO
+    -vaultCoreClient: VaultCoreClient
+    -auditLogRepository: AuditLogRepository
+  }
+
+  MandateUpdateService <|-- MandateUpdateServiceImpl
+}
+
+' === Adapter Layer ===
+package "Adapter Layer" {
+  class VaultCoreClient <<interface>> {
+    +updateMandate(request: MandateUpdateRequestDTO): VaultResponse
+  }
+
+  class VaultResponse {
+    -status: String
+    -correlationId: String
+  }
+}
+
+' === Persistence Layer ===
+package "Persistence Layer" {
+  class AuditLogRepository <<repository>> {
+    +logRequest(request: MandateUpdateRequestDTO)
+    +logResponse(response: MandateUpdateResultDTO)
+  }
+}
+
+' === Relationships ===
+MandateUpdateController --> MandateUpdateService : calls
+MandateUpdateServiceImpl --> VaultCoreClient : calls
+MandateUpdateServiceImpl --> AuditLogRepository : persists
+
+VaultCoreClient --> VaultResponse : returns
+
+' === Compliance Annotations ===
+note right of MandateUpdateServiceImpl
+<<Tier 1>>  
+Handles PII  
+GDPR compliant  
+Uses OAuth2 + Secrets Manager
+end note
+
+note bottom of AuditLogRepository
+<<Data Classification: PII>>  
+Encrypted, 7-year retention  
+Logged via JDBC
+end note
+
+@enduml

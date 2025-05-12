@@ -1,0 +1,79 @@
+@startuml DirectDebitDeploymentDiagram
+' === Styling ===
+skinparam backgroundColor #F9F9F9
+skinparam shadowing true
+skinparam componentStyle rectangle
+skinparam node {
+  BackgroundColor #FFFFFF
+  BorderColor #000000
+  FontName Consolas
+}
+skinparam ArrowColor #4A90E2
+
+title Direct Debit Mandate Update Microservice – Deployment View
+
+' === Legend ===
+legend
+|= Tag |= Meaning |
+| <<aws>> | AWS-managed Service |
+| <<container>> | Deployed Application |
+| <<external>> | Third-party System |
+endlegend
+
+' === External Client ===
+actor "CRM or Client Portal" as Client #LightBlue
+
+' === AWS Infrastructure ===
+node "AWS VPC (10.0.0.0/16)" <<aws>> {
+  
+  node "Public Subnet (10.0.1.0/24)" {
+    node "Application Load Balancer" as ALB <<aws>> {
+      [HTTP Listener (Port 80)]
+    }
+  }
+
+  node "Private Subnet (10.0.11.0/24)" {
+    node "ECS Fargate Task" <<container>> {
+      component "MandateUpdateController\n(Spring Boot)" as Controller
+    }
+
+    node "Secrets Manager" <<aws>> {
+      database "DB/API Credentials" as Secrets
+    }
+
+    node "CloudWatch Logs" <<aws>> {
+      [Service Logs]
+    }
+
+    node "RDS PostgreSQL" <<aws>> {
+      database "AuditLogDB" as Audit
+    }
+  }
+}
+
+' === Vault Core External ===
+node "Thought Machine\nVault Core API" as VaultCore <<external>> #LightBlue
+
+' === Relationships ===
+Client --> [HTTP Listener (Port 80)] : HTTP Request (POST /mandate/update)
+[HTTP Listener (Port 80)] --> Controller : Forwards via target group
+Controller --> Secrets : Retrieves DB/API credentials
+Controller --> VaultCore : Sends mandate update
+Controller --> Audit : Writes audit logs (JDBC)
+Controller --> [Service Logs] : Writes logs
+VaultCore --> Controller : 200 OK / 4xx
+
+' === Compliance Notes ===
+note right of Controller
+  <<Tier 1 Service>>
+  OAuth2 Auth, Handles PII
+  Logs & Secrets are encrypted
+end note
+
+note bottom of Audit
+  <<GDPR Zone>>
+  7-Year Retention Policy
+  Encrypted at Rest
+end note
+
+@enduml

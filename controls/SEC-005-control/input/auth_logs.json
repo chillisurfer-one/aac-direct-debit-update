@@ -1,0 +1,5 @@
+{
+  "logs": {
+    "contains_failed_login_logs": false
+  }
+}

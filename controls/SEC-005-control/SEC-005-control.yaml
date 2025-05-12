@@ -1,0 +1,12 @@
+id: SEC-005
+title: Mandatory logging of all failed login or API attempts
+description: Ensure all authentication failures are logged to support audit requirements.
+policy: policies/security/SEC-005-log-failed-auth.rego
+input_source: controls/SEC-005/input/auth_logs.json
+severity: medium
+enforcement: soft
+stage: runtime
+tags:
+- security
+- logging
+- audit

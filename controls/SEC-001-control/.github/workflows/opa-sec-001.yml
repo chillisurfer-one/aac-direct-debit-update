@@ -1,0 +1,43 @@
+
+name: OPA Policy Check - SEC-001
+
+on:
+  push:
+    paths:
+      - 'policies/security/SEC-001-auth-required.rego'
+      - 'controls/SEC-001/input/openapi.json'
+      - 'controls/SEC-001/SEC-001-control.yaml'
+      - 'controls/SEC-001/.github/workflows/opa-sec-001.yml'
+  pull_request:
+    paths:
+      - 'policies/security/SEC-001-auth-required.rego'
+      - 'controls/SEC-001/input/openapi.json'
+
+jobs:
+  opa-policy-check:
+    runs-on: ubuntu-latest
+    name: OPA Evaluation for SEC-001
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up OPA CLI
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Run SEC-001 Policy Evaluation
+        run: |
+          opa eval -d policies/security/SEC-001-auth-required.rego \
+                   -i controls/SEC-001/input/openapi.json \
+                   "data.policies.security.violation" --format=json > opa_output.json
+          cat opa_output.json
+
+      - name: Fail if violations found
+        run: |
+          if jq -e '.result[0].expressions[0].value | length > 0' opa_output.json; then
+            echo "❌ Violations found in SEC-001"
+            exit 1
+          else
+            echo "✅ No violations found in SEC-001"
+          fi

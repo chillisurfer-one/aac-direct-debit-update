@@ -1,0 +1,12 @@
+id: SEC-004
+title: OAuth2 clients must not bypass token validation
+description: Ensure token validation is enabled for all OAuth2-enabled clients.
+policy: policies/security/SEC-004-oauth-token-validation.rego
+input_source: controls/SEC-004/input/spring_oauth2.json
+severity: high
+enforcement: hard
+stage: build
+tags:
+- security
+- oauth2
+- authentication

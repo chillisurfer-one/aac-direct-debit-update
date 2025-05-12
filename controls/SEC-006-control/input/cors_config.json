@@ -1,0 +1,9 @@
+{
+  "config": {
+    "cors": {
+      "allowed_origins": [
+        "*"
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "spring_security": {
+    "annotations": [
+      "@PermitAll"
+    ],
+    "unsecured_paths": [
+      "/api/"
+    ]
+  }
+}

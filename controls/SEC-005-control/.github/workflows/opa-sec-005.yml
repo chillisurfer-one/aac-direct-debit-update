@@ -1,0 +1,42 @@
+
+name: OPA Policy Check - SEC-005
+
+on:
+  push:
+    paths:
+      - 'policies/security/SEC-005-log-failed-auth.rego'
+      - 'controls/SEC-005/input/auth_logs.json'
+      - 'controls/SEC-005/SEC-005-control.yaml'
+      - 'controls/SEC-005/.github/workflows/opa-sec-005.yml'
+  pull_request:
+    paths:
+      - 'policies/security/SEC-005-log-failed-auth.rego'
+      - 'controls/SEC-005/input/auth_logs.json'
+
+jobs:
+  opa-policy-check:
+    runs-on: ubuntu-latest
+    name: OPA Evaluation for SEC-005
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up OPA CLI
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Run SEC-005 Policy Evaluation
+        run: |
+          opa eval -d policies/security/SEC-005-log-failed-auth.rego \
+                   -i controls/SEC-005/input/auth_logs.json \
+                   "data.policies.security.violation" --format=json > opa_output.json
+          cat opa_output.json
+
+      - name: Warn if violations found
+        run: |
+          if jq -e '.result[0].expressions[0].value | length > 0' opa_output.json; then
+            echo "⚠️ Warning: Violations found in SEC-005 (soft enforcement)"
+          else
+            echo "✅ No violations found in SEC-005"
+          fi

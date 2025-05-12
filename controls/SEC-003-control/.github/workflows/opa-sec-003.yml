@@ -1,0 +1,43 @@
+
+name: OPA Policy Check - SEC-003
+
+on:
+  push:
+    paths:
+      - 'policies/security/SEC-003-no-hardcoded-secrets.rego'
+      - 'controls/SEC-003/input/code_secrets.json'
+      - 'controls/SEC-003/SEC-003-control.yaml'
+      - 'controls/SEC-003/.github/workflows/opa-sec-003.yml'
+  pull_request:
+    paths:
+      - 'policies/security/SEC-003-no-hardcoded-secrets.rego'
+      - 'controls/SEC-003/input/code_secrets.json'
+
+jobs:
+  opa-policy-check:
+    runs-on: ubuntu-latest
+    name: OPA Evaluation for SEC-003
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up OPA CLI
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Run SEC-003 Policy Evaluation
+        run: |
+          opa eval -d policies/security/SEC-003-no-hardcoded-secrets.rego \
+                   -i controls/SEC-003/input/code_secrets.json \
+                   "data.policies.security.violation" --format=json > opa_output.json
+          cat opa_output.json
+
+      - name: Fail if violations found
+        run: |
+          if jq -e '.result[0].expressions[0].value | length > 0' opa_output.json; then
+            echo "❌ Violations found in SEC-003"
+            exit 1
+          else
+            echo "✅ No violations found in SEC-003"
+          fi

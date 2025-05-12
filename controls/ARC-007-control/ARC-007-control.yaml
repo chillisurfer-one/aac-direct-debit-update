@@ -1,0 +1,12 @@
+id: ARC-007
+title: All classes must belong to allowed package namespaces
+description: Enforce proper package structure (e.g., com.mycompany.directdebitupdate.*).
+policy: ARC-007/src/test/java/com/mycompany/architecture/ARC007Test.java
+input_source: compiled classes
+severity: medium
+enforcement: hard
+stage: build
+tags:
+- architecture
+- packages
+- modularity

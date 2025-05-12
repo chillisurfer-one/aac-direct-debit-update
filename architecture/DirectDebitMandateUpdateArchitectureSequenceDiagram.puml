@@ -1,0 +1,69 @@
+@startuml DirectDebitMandateUpdateSequence
+
+' === Styling ===
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Consolas"
+skinparam sequence {
+  ArrowColor DeepSkyBlue
+  LifeLineBorderColor Black
+  LifeLineBackgroundColor #EFEFEF
+  ParticipantBorderColor Black
+  ParticipantBackgroundColor #DDFFDD
+  ActorBorderColor Black
+  ActorBackgroundColor #LightBlue
+  NoteBackgroundColor #FFFFCC
+  MessageAlignment center
+}
+
+' === Participants ===
+actor ClientApp as "CRM / Client Portal"
+participant "MandateUpdateController\n(Spring Boot)" as Controller
+participant "MandateUpdateService\n(Spring Service)" as Service
+participant "VaultCoreClient\n(Spring REST Client)" as Adapter
+database "Audit Log\n(PostgreSQL)" as Audit
+participant "Vault Core\n(Thought Machine)" as VaultCore
+
+' === Sequence ===
+autonumber
+
+ClientApp -> Controller : POST /api/mandate/update
+note right of Controller
+  Validates input fields\n(e.g. sort code, mandate ID)
+end note
+
+Controller -> Service : processMandateUpdate(request)
+
+Service -> Audit : logRequest()
+note right of Audit
+  Stores incoming payload\nwith timestamp and metadata
+end note
+
+Service -> Adapter : updateMandateInVault(validatedRequest)
+
+Adapter -> VaultCore : POST /smart_contracts/update_direct_debit_mandate
+note right of VaultCore
+  Processes the instruction\nReturns update status
+end note
+
+VaultCore --> Adapter : 200 OK / 4xx / 5xx
+
+Adapter --> Service : response
+
+Service -> Audit : logResponse(status)
+note right of Audit
+  Stores status, request ID, and\nVault Core correlation info
+end note
+
+Service --> Controller : MandateUpdateResult
+
+Controller --> ClientApp : HTTP 200 OK / Error
+
+' === Optional Error Handling ===
+alt VaultCore failure
+  Adapter --> Service : throws VaultUpdateException
+  Service -> Audit : logError()
+  Service --> Controller : errorResponse
+  Controller --> ClientApp : HTTP 500 + Error JSON
+end alt
+
+@enduml

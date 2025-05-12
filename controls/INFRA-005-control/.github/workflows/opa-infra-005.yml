@@ -1,0 +1,39 @@
+
+name: OPA Policy Check - INFRA-005
+
+on:
+  push:
+    paths:
+      - 'infra_controls/INFRA-005/**'
+  pull_request:
+    paths:
+      - 'infra_controls/INFRA-005/**'
+
+jobs:
+  opa-policy-check:
+    runs-on: ubuntu-latest
+    name: OPA Evaluation for INFRA-005
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up OPA CLI
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Run INFRA-005 Policy Evaluation
+        run: |
+          opa eval -d infra_controls/INFRA-005/policies/infrastructure/INFRA-005-cloudwatch-logs-metrics.rego \
+                   -i infra_controls/INFRA-005/input/terraform.json \
+                   "data.policies.infrastructure.violation" --format=json > opa_output.json
+          cat opa_output.json
+
+      - name: Fail if violations found
+        run: |
+          if jq -e '.result[0].expressions[0].value | length > 0' opa_output.json; then
+            echo "❌ Violations found in INFRA-005"
+            exit 1
+          else
+            echo "✅ No violations found in INFRA-005"
+          fi

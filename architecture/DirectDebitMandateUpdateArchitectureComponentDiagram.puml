@@ -1,0 +1,59 @@
+@startuml DirectDebitMandateUpdateArchitecture
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+' === Styling ===
+skinparam backgroundColor #F9F9F9
+skinparam defaultFontName "Consolas"
+skinparam ArrowColor #4A90E2
+skinparam componentStyle rectangle
+skinparam Shadowing true
+
+' === Legend ===
+legend
+|= Color |= Meaning |
+| #LightBlue | External System |
+| #Green | Internal Service |
+| #Yellow | Data Store |
+endlegend
+
+' === External Systems ===
+System_Ext(ClientApp, "CRM / Client Portal", "Initiates mandate update requests") #LightBlue
+System_Ext(ThoughtMachine, "Thought Machine Vault Core", "Core banking API") #LightBlue
+
+' === Internal System Boundary ===
+System_Boundary(b1, "Direct Debit Mandate Update Microservice") {
+  
+  Container(WebAPI, "MandateUpdateController", "Spring Boot REST Controller", "Exposes mandate update API") <<controller>> #Green
+  Container(ServiceLayer, "MandateUpdateService", "Spring Service", "Business logic for validation and transformation") <<service>> #Green
+  Container(AdapterClient, "VaultCoreClient", "Spring REST Client", "Calls Thought Machine API") <<interface>> #Green
+  Container(AuditStore, "Audit Log", "PostgreSQL", "Stores request/response logs and metadata") #Yellow
+}
+
+' === Relationships ===
+Rel(ClientApp, WebAPI, "Sends Direct Debit Update", "HTTPS / JSON")
+Rel(WebAPI, ServiceLayer, "Invokes mandate update logic")
+Rel(ServiceLayer, AdapterClient, "Calls Vault Core API")
+Rel(AdapterClient, ThoughtMachine, "Performs mandate update", "HTTPS + OAuth2") 
+Rel(ServiceLayer, AuditStore, "Persists audit logs", "JDBC")
+
+' === Annotations ===
+note right of ServiceLayer
+  <<Tier 1>>
+  Validates mandate rules
+  Applies compliance logic
+  Handles PII
+end note
+
+note top of AdapterClient
+  Secure API integration
+  Handles retries and error translation
+end note
+
+note bottom of AuditStore
+  <<GDPR>>
+  Contains masked sensitive fields
+  Data retention: 7 years
+end note
+
+@enduml

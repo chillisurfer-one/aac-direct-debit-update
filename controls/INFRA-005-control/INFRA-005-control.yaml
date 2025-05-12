@@ -1,0 +1,14 @@
+id: INFRA-005
+title: CloudWatch must capture logs and custom metrics
+description: Ensure all applications push logs and metrics to CloudWatch for observability.
+policy: policies/infrastructure/INFRA-005-cloudwatch-logs-metrics.rego
+input_source: infra_controls/INFRA-005/input/terraform.json
+severity: medium
+enforcement: hard
+stage: deploy
+tags:
+- infrastructure
+- cloudwatch
+- observability
+- logging
+- metrics

@@ -1,0 +1,13 @@
+id: INFRA-002
+title: API Gateway must use HTTPS-only endpoints
+description: Ensure all API Gateway deployments enforce secure HTTPS-only communication.
+policy: policies/infrastructure/INFRA-002-api-gateway-https.rego
+input_source: infra_controls/INFRA-002/input/terraform.json
+severity: high
+enforcement: hard
+stage: deploy
+tags:
+- infrastructure
+- api-gateway
+- https
+- security

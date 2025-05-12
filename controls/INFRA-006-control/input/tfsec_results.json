@@ -1,0 +1,19 @@
+{
+  "results": [
+    {
+      "rule_id": "AWS001",
+      "severity": "LOW",
+      "description": "S3 bucket should log access"
+    },
+    {
+      "rule_id": "AWS002",
+      "severity": "HIGH",
+      "description": "Security group allows 0.0.0.0/0"
+    },
+    {
+      "rule_id": "AWS003",
+      "severity": "CRITICAL",
+      "description": "Database encryption not enabled"
+    }
+  ]
+}

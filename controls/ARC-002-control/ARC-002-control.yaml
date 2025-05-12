@@ -1,0 +1,12 @@
+id: ARC-002
+title: Repositories must not be injected into controllers
+description: Enforce clean separation by disallowing repository injection into controllers.
+policy: ARC-002/src/test/java/com/mycompany/architecture/ARC-002Test.java
+input_source: compiled classes
+severity: high
+enforcement: hard
+stage: build
+tags:
+- architecture
+- archunit
+- java

@@ -1,0 +1,16 @@
+{
+  "terraform": {
+    "resources": [
+      {
+        "type": "aws_db_instance",
+        "name": "audit-logs-db",
+        "storage_encrypted": false
+      },
+      {
+        "type": "aws_db_instance",
+        "name": "user-data-db",
+        "storage_encrypted": true
+      }
+    ]
+  }
+}

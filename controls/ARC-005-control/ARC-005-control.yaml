@@ -1,0 +1,12 @@
+id: ARC-005
+title: Use constructor injection, not field injection
+description: Improve testability and clarity by using constructor injection only.
+policy: ARC-005/src/test/java/com/mycompany/architecture/ARC-005Test.java
+input_source: compiled classes
+severity: high
+enforcement: hard
+stage: build
+tags:
+- architecture
+- archunit
+- java

@@ -1,0 +1,14 @@
+{
+  "terraform": {
+    "resources": [
+      {
+        "type": "aws_secretsmanager_secret",
+        "name": "db-credentials"
+      },
+      {
+        "type": "aws_ssm_parameter",
+        "name": "legacy-api-key"
+      }
+    ]
+  }
+}

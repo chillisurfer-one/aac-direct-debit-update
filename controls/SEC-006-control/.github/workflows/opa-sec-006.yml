@@ -1,0 +1,43 @@
+
+name: OPA Policy Check - SEC-006
+
+on:
+  push:
+    paths:
+      - 'policies/security/SEC-006-cors-restriction.rego'
+      - 'controls/SEC-006/input/cors_config.json'
+      - 'controls/SEC-006/SEC-006-control.yaml'
+      - 'controls/SEC-006/.github/workflows/opa-sec-006.yml'
+  pull_request:
+    paths:
+      - 'policies/security/SEC-006-cors-restriction.rego'
+      - 'controls/SEC-006/input/cors_config.json'
+
+jobs:
+  opa-policy-check:
+    runs-on: ubuntu-latest
+    name: OPA Evaluation for SEC-006
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up OPA CLI
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Run SEC-006 Policy Evaluation
+        run: |
+          opa eval -d policies/security/SEC-006-cors-restriction.rego \
+                   -i controls/SEC-006/input/cors_config.json \
+                   "data.policies.security.violation" --format=json > opa_output.json
+          cat opa_output.json
+
+      - name: Fail if violations found
+        run: |
+          if jq -e '.result[0].expressions[0].value | length > 0' opa_output.json; then
+            echo "❌ Violations found in SEC-006"
+            exit 1
+          else
+            echo "✅ No violations found in SEC-006"
+          fi

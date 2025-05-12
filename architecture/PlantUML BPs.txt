@@ -1,0 +1,207 @@
+
+---
+
+### ? **1. Clear Diagram Type Selection**
+
+Choose the appropriate diagram type based on what you’re modeling:
+
+* **@startuml / @enduml**: Required for all.
+* `@startuml` with:
+
+  * `component`, `class`, `sequence`, `state`, `activity`, `usecase`, or `deployment`
+  * Or `skinparam` customization for a specific type
+
+---
+
+### ? **2. Hierarchical Structure / Abstraction Levels**
+
+Model **different layers**:
+
+* **Context Diagrams** (External systems, major subsystems)
+* **Container Diagrams** (Apps, DBs, APIs)
+* **Component Diagrams** (Services, libraries, adapters)
+* **Class Diagrams** (Detailed data structures)
+
+Use `package` or `rectangle` to group logically:
+
+```plantuml
+package "User Services" {
+  [LoginService] --> [UserRepository]
+}
+```
+
+---
+
+### ? **3. Rich Semantics with Stereotypes and Tags**
+
+Use:
+
+* `<<interface>>`, `<<controller>>`, `<<service>>`, `<<external>>`
+* Custom icons via `!includeurl` or `sprite` definitions
+
+```plantuml
+[API Gateway] <<external>> #LightBlue
+```
+
+---
+
+### ? **4. Relationships with Customization**
+
+* Use different arrows for direction and interaction type:
+
+  * `-->`, `->`, `..>`, `--|`
+* Annotate connections:
+
+```plantuml
+[UserService] --> [AuthService] : Authenticates via OAuth
+```
+
+---
+
+### ? **5. Dynamic Behavior (if needed)**
+
+For sequence diagrams:
+
+* Use `autonumber`, `alt`, `opt`, `loop`, `group`
+* Annotate interactions with latency, status codes, or decisions
+
+---
+
+### ? **6. Thematic Styling and Readability**
+
+Use `skinparam` to enforce:
+
+* Color schemes
+* Fonts
+* Element spacing
+* Shadowing
+
+Example:
+
+```plantuml
+skinparam componentStyle rectangle
+skinparam backgroundColor #F8F8F8
+skinparam ArrowColor NavyBlue
+skinparam defaultFontName "Consolas"
+```
+
+---
+
+### ? **7. Legend and Notes**
+
+Clarify with:
+
+* `note right of`, `note top of`
+* `legend` for symbol meanings or status
+
+```plantuml
+legend
+|= Color |= Meaning |
+| #LightBlue | External System |
+| #Green | Internal Service |
+endlegend
+```
+
+---
+
+### ? **8. Icons and Visuals**
+
+Use icon libraries to embed visuals:
+
+```plantuml
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+```
+
+Or your own sprites:
+
+```plantuml
+sprite $aws [aws icon here]
+[Lambda] $aws
+```
+
+---
+
+### ? **9. Modularization (include files)**
+
+Split into:
+
+* `main.puml`
+* `common-header.puml`
+* `components/*.puml`
+* Allows reuse and cleaner diagrams
+
+```plantuml
+!include common-header.puml
+!include components/payment-service.puml
+```
+
+---
+
+### ? **10. Annotations for Compliance or Governance**
+
+Add tags for:
+
+* Criticality (e.g., Tier 1)
+* Regulatory zones (e.g., PCI, GDPR)
+* Data classifications (e.g., PII, Confidential)
+
+---
+
+
+
+@startuml AdvancedArchitectureDiagram
+
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+' === Styling ===
+skinparam backgroundColor #F9F9F9
+skinparam defaultFontName "Consolas"
+skinparam ArrowColor #4A90E2
+skinparam componentStyle rectangle
+skinparam Shadowing true
+
+' === Legend ===
+legend top left
+|= Color |= Meaning |
+| #LightBlue | External System |
+| #Green | Internal Service |
+| #Yellow | Data Store |
+endlegend
+
+' === External Systems ===
+System_Ext(ExternalUser, "External User", "Interacts via UI")
+System_Ext(AuthProvider, "OAuth Provider", "3rd party auth")
+
+' === Internal Systems ===
+System_Boundary(s1, "User Management") {
+  Container(UserWebApp, "User Web App", "React", "User interface")
+  Container(UserService, "User Service", "Spring Boot", "Handles user logic")
+  ContainerDb(UserDb, "User DB", "PostgreSQL", "Stores user data")
+}
+
+System_Boundary(s2, "Payment System") {
+  Container(PaymentService, "Payment Service", "Node.js", "Handles transactions")
+  ContainerDb(PaymentDb, "Payment DB", "MongoDB", "Stores payment info")
+}
+
+' === Relationships ===
+Rel(ExternalUser, UserWebApp, "Uses", "HTTPS")
+Rel(UserWebApp, UserService, "API calls", "REST/JSON")
+Rel(UserService, UserDb, "Reads/Writes")
+Rel(UserService, AuthProvider, "OAuth2 Authentication")
+Rel(UserService, PaymentService, "Triggers payment")
+Rel(PaymentService, PaymentDb, "Reads/Writes")
+
+' === Annotations ===
+note right of UserService
+  <<Tier 1>>
+  Handles PII
+  Compliant with GDPR
+end note
+
+note top of PaymentService
+  <<PCI Zone>>
+  Tokenised transaction handling
+end note
+
+@enduml

@@ -1,0 +1,13 @@
+id: INFRA-003
+title: Audit logs must be stored in encrypted RDS
+description: Ensure database instances used for audit logs are encrypted at rest.
+policy: policies/infrastructure/INFRA-003-rds-encrypted.rego
+input_source: infra_controls/INFRA-003/input/terraform.json
+severity: high
+enforcement: hard
+stage: deploy
+tags:
+- infrastructure
+- rds
+- encryption
+- audit

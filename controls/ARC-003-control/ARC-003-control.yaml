@@ -1,0 +1,13 @@
+id: ARC-003
+title: Domain entities must not depend on controller or DTO packages
+description: Maintain clean architecture by preventing domain layer from depending
+  on web or DTO layers.
+policy: ARC-003/src/test/java/com/mycompany/architecture/ARC-003Test.java
+input_source: compiled classes
+severity: high
+enforcement: hard
+stage: build
+tags:
+- architecture
+- archunit
+- java

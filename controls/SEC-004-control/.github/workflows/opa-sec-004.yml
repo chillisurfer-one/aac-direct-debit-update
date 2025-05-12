@@ -1,0 +1,43 @@
+
+name: OPA Policy Check - SEC-004
+
+on:
+  push:
+    paths:
+      - 'policies/security/SEC-004-oauth-token-validation.rego'
+      - 'controls/SEC-004/input/spring_oauth2.json'
+      - 'controls/SEC-004/SEC-004-control.yaml'
+      - 'controls/SEC-004/.github/workflows/opa-sec-004.yml'
+  pull_request:
+    paths:
+      - 'policies/security/SEC-004-oauth-token-validation.rego'
+      - 'controls/SEC-004/input/spring_oauth2.json'
+
+jobs:
+  opa-policy-check:
+    runs-on: ubuntu-latest
+    name: OPA Evaluation for SEC-004
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up OPA CLI
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Run SEC-004 Policy Evaluation
+        run: |
+          opa eval -d policies/security/SEC-004-oauth-token-validation.rego \
+                   -i controls/SEC-004/input/spring_oauth2.json \
+                   "data.policies.security.violation" --format=json > opa_output.json
+          cat opa_output.json
+
+      - name: Fail if violations found
+        run: |
+          if jq -e '.result[0].expressions[0].value | length > 0' opa_output.json; then
+            echo "❌ Violations found in SEC-004"
+            exit 1
+          else
+            echo "✅ No violations found in SEC-004"
+          fi

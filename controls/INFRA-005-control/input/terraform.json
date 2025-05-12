@@ -1,0 +1,18 @@
+{
+  "terraform": {
+    "resources": [
+      {
+        "type": "aws_ecs_service",
+        "name": "payment-service",
+        "cloudwatch_logs_enabled": true,
+        "custom_metrics_enabled": true
+      },
+      {
+        "type": "aws_lambda_function",
+        "name": "audit-function",
+        "cloudwatch_logs_enabled": false,
+        "custom_metrics_enabled": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "terraform": {
+    "resources": [
+      {
+        "type": "aws_api_gateway",
+        "name": "secure-api",
+        "protocol": "HTTPS"
+      },
+      {
+        "type": "aws_api_gateway",
+        "name": "legacy-api",
+        "protocol": "HTTP"
+      }
+    ]
+  }
+}

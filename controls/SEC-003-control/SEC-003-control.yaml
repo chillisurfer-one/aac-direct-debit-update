@@ -1,0 +1,13 @@
+id: SEC-003
+title: Secrets must not be hardcoded in code or config
+description: Ensure AWS Secrets Manager or environment injection is used instead of
+  hardcoding secrets.
+policy: policies/security/SEC-003-no-hardcoded-secrets.rego
+input_source: controls/SEC-003/input/code_secrets.json
+severity: high
+enforcement: hard
+stage: build
+tags:
+- security
+- secrets
+- injection

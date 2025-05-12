@@ -1,0 +1,85 @@
+**Best Practices for Writing Architecture Decision Records (ADRs)** ensure that design decisions are well-documented, traceable, and useful across the software development lifecycle. Here are the key principles and best practices:
+
+---
+
+### ?? 1. **Follow a Standard Template**
+
+Use a consistent structure for all ADRs. The commonly accepted format includes:
+
+```
+# Title
+## Status
+(e.g., Proposed, Accepted, Deprecated, Superseded)
+
+## Context
+What is the background? What problem are you trying to solve?
+
+## Decision
+What decision did you make and why?
+
+## Consequences
+What are the implications, trade-offs, or follow-up actions?
+
+## Alternatives Considered (optional)
+Other options you evaluated and why they were rejected.
+
+## Related ADRs (optional)
+Links to other related or superseded ADRs.
+```
+
+---
+
+### ?? 2. **Use Plain Language**
+
+Avoid jargon. Write for your future self and other stakeholders (e.g., developers, architects, auditors) who may not be familiar with the decision.
+
+---
+
+### ?? 3. **Keep it Short and Focused**
+
+One decision per ADR. If a new decision modifies or builds on another, create a new ADR and reference the original.
+
+---
+
+### ?? 4. **Make It Immutable**
+
+Once accepted, don’t edit an ADR to change history. If the decision changes, create a new ADR that supersedes the old one. Mark the original as "Superseded."
+
+---
+
+### ?? 5. **Record the Rationale**
+
+Document the *why*, not just the *what*. The value of an ADR is in understanding *why* the team made that choice at that time, including constraints and priorities.
+
+---
+
+### ?? 6. **Version-Control ADRs**
+
+Store ADRs in the same source control repo as your code (e.g., `/adr/` directory). This keeps decisions close to implementation and ensures traceability.
+
+---
+
+### ?? 7. **Use Sequential Filenames**
+
+Name ADRs using a numbered prefix (e.g., `0001-use-postgresql.md`, `0002-switch-to-kafka.md`). This preserves order and history.
+
+---
+
+### ?? 8. **Review and Approve**
+
+Discuss ADRs with team members. Ideally, get explicit team or architectural governance approval before marking them as "Accepted."
+
+---
+
+### ?? 9. **Link to Implementation**
+
+When possible, cross-reference ADRs in code comments or CI/CD pipelines. For example, an ADR approving a tool like ArchUnit could be linked in test classes validating architectural constraints.
+
+---
+
+### ?? 10. **Revisit Periodically**
+
+Schedule regular reviews of your ADRs (e.g., during quarterly tech reviews) to see if any are outdated or should be superseded.
+
+---
+

@@ -1,0 +1,16 @@
+{
+  "terraform": {
+    "resources": [
+      {
+        "type": "aws_ecs_task_definition",
+        "name": "payment-task",
+        "image_tag": "latest"
+      },
+      {
+        "type": "aws_ecs_task_definition",
+        "name": "audit-task",
+        "image_tag": "stable"
+      }
+    ]
+  }
+}
