@@ -1,0 +1,7 @@
+{
+  "containers": [
+    {"alias": "Monitoring", "name": "Amazon CloudWatch", "stereotype": ["observability"]},
+    {"alias": "WebAPI", "name": "MandateUpdateController", "stereotype": ["controller"]},
+    {"alias": "ServiceLayer", "name": "MandateUpdateService", "stereotype": ["service"]}
+  ]
+}

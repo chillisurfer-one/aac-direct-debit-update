@@ -1,0 +1,16 @@
+{
+  "containers": [
+    {
+      "alias": "AuditStore",
+      "name": "Audit Log",
+      "technology": "Amazon RDS PostgreSQL",
+      "stereotype": ["data_store"]
+    },
+    {
+      "alias": "WebAPI",
+      "name": "MandateUpdateController",
+      "technology": "Spring Boot",
+      "stereotype": ["controller"]
+    }
+  ]
+}

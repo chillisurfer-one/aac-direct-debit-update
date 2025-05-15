@@ -1,0 +1,6 @@
+{
+  "relationships": [
+    {"source": "MandateUpdateService", "destination": "ThoughtMachine"},
+    {"source": "VaultCoreClient", "destination": "ThoughtMachine"}
+  ]
+}

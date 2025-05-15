@@ -1,0 +1,7 @@
+{
+  "containers": [
+    {"alias": "WebAPI", "boundary": "ecs"},
+    {"alias": "ServiceLayer", "boundary": "ecs"},
+    {"alias": "VaultCoreClient", "boundary": "ecs"}
+  ]
+}

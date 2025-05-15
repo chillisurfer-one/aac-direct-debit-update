@@ -1,0 +1,7 @@
+{
+  "containers": [
+    {"alias": "Secrets", "name": "AWS Secrets Manager", "stereotype": ["secrets_store"]},
+    {"alias": "WebAPI", "name": "MandateUpdateController", "stereotype": ["controller"]},
+    {"alias": "ServiceLayer", "name": "MandateUpdateService", "stereotype": ["service"]}
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "relationships": [
+    {"source": "ClientApp", "destination": "ApiGateway"},
+    {"source": "ApiGateway", "destination": "WebAPI"},
+    {"source": "WebAPI", "destination": "ServiceLayer"}
+  ]
+}

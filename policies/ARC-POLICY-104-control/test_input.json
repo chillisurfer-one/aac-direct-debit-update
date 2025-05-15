@@ -1,0 +1,16 @@
+{
+  "containers": [
+    {
+      "alias": "VaultCoreClient",
+      "name": "VaultCoreClient",
+      "stereotype": ["interface", "uses_secret"]
+    }
+  ],
+  "relationships": [
+    {
+      "source": "VaultCoreClient",
+      "destination": "ThoughtMachine",
+      "external": true
+    }
+  ]
+}
