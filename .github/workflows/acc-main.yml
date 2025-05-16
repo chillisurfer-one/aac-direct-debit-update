@@ -22,3 +22,4 @@ jobs:
             echo "❌ No ADR files found in the adr/ directory."
             exit 1
           fi
+          echo "Exit status: $?"
