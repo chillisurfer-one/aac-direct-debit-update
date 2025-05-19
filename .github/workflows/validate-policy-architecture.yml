@@ -23,6 +23,8 @@ jobs:
           python-version: '3.10'
       - name: Install dependencies
         run: pip install -r aac-direct-debit-update/requirements.txt || true
+      - name: Set script permissions
+        run: chmod 644 scripts/validate_policy_architecture_compliance.py
       - name: Run validation script
         run: >-
           python
