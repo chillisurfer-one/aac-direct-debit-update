@@ -26,4 +26,4 @@ jobs:
       - name: Run validation script
         run: >-
           python
-          /scripts/validate_policy_architecture_compliance.py
+            scripts/validate_policy_architecture_compliance.py
