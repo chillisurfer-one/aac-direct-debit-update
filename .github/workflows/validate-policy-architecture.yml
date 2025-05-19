@@ -17,8 +17,6 @@ jobs:
         run: pwd
       - name: listing
         run: ls
-      - name: Change to repo directory
-       # run: cd aac-direct-debit-update
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
