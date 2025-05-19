@@ -1,0 +1,26 @@
+name: Validate Policy-Architecture Compliance
+'on':
+  push:
+    paths:
+      - 'aac-direct-debit-update/architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml'
+      #- aac-direct-debit-update/architecture/**/*.puml
+  pull_request:
+    paths:
+      - aac-direct-debit-update/architecture/**/*.puml
+  workflow_dispatch: null
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install -r requirements.txt || true
+      - name: Run validation script
+        run: >-
+          python
+          aac-direct-debit-update/scripts/validate_policy_architecture_compliance.py
