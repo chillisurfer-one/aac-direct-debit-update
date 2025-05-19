@@ -23,14 +23,14 @@ jobs:
           python-version: '3.10'
 
       - name: Make script executable
-        run: chmod +x scripts/validate_policy_architecture_compliance.py
+        run: chmod +x scripts/validate_policy_architecture_compliance1.py
 
       - name: Run validation script
-        run: python ./scripts/validate_policy_architecture_compliance.py
+        run: python ./scripts/validate_policy_architecture_compliance1.py
       
       - name: Upload report artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report
-          path: aac-direct-debit-update/aac-direct-debit-update_*/
+          path: aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md
