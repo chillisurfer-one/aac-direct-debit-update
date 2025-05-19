@@ -23,4 +23,4 @@ jobs:
       - name: Run validation script
         run: >-
           python
-          aac-direct-debit-update/scripts/validate_policy_architecture_compliance.py
+          /scripts/validate_policy_architecture_compliance.py
