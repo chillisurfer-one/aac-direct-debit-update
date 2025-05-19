@@ -26,4 +26,4 @@ jobs:
         run: chmod +x scripts/validate_policy_architecture_compliance.py
 
       - name: Run validation script
-        run: ./scripts/validate_policy_architecture_compliance.py
+        run: python ./scripts/validate_policy_architecture_compliance.py
