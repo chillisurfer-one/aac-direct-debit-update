@@ -12,9 +12,6 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: aac-direct-debit-update
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -25,10 +22,10 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt || true
+        run: pip install -r aac-direct-debit-update/requirements.txt || true
 
       - name: Make script executable
-        run: chmod +x scripts/validate_policy_architecture_compliance.py
+        run: chmod +x aac-direct-debit-update/scripts/validate_policy_architecture_compliance.py
 
       - name: Run validation script
-        run: ./scripts/validate_policy_architecture_compliance.py
+        run: ./aac-direct-debit-update/scripts/validate_policy_architecture_compliance.py
