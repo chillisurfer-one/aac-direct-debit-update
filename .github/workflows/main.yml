@@ -22,7 +22,10 @@ jobs:
         run: >
           wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O yq
           chmod +x yq
-          mv yq /usr/local/bin/yq
+          sudo mv yq /usr/local/bin/yq
+     
+      - name: Confirm yq installation
+        run: yq --version
      
       #Print working directory and contents for debugging
       - name: Debug directory structure
