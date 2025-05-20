@@ -16,14 +16,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-    #Install yq to parse YAML
+  
       - name: Install yq
         run: |
-          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 
-          -O yq
+          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O yq
           chmod +x yq
           sudo mv yq /usr/local/bin/yq
+
+    # #Install yq to parse YAML
+    #   - name: Install yq
+    #     run: |
+    #       wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 
+    #       -O yq
+    #       chmod +x yq
+    #       sudo mv yq /usr/local/bin/yq
      
       - name: Confirm yq installation
         run: yq --version
