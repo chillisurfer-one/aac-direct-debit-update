@@ -1,5 +1,5 @@
-name: Validate Code exists in Controls
-'on':
+name: Validate Controls as Code Exist
+on:
   push:
     paths:
       - aac-direct-debit-update/controls/**
@@ -8,7 +8,7 @@ name: Validate Code exists in Controls
       - aac-direct-debit-update/controls/**
 jobs:
   check-controls-exist:
-    name: Ensure Controls Have Policy Code
+    name: Validate Control Definitions and Code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -20,18 +20,18 @@ jobs:
           -O /usr/bin/yq
 
           sudo chmod +x /usr/bin/yq
-      - name: Validate that all controls have associated code
+      - name: Validate that all controls reference existing control code
         run: >
-          echo "Validating each control YAML has a 'policy' file that exists"
+          echo "Searching for all *-control.yaml files..."
 
 
-          # Find all control definition YAML files
+          # Find all control YAML files recursively under /controls
 
           CONTROL_FILES=$(find aac-direct-debit-update/controls -name
           '*-control.yaml')
 
 
-          # Exit if no control files are found
+          # Fail if no control files are found
 
           if [ -z "$CONTROL_FILES" ]; then
             echo "No control YAML files found under /controls"
@@ -39,30 +39,38 @@ jobs:
           fi
 
 
-          # Track validation status
-
           STATUS=0
 
 
-          # Iterate over each found control YAML
+          # Loop over each control YAML file
 
           for FILE in $CONTROL_FILES; do
             echo "Checking $FILE"
 
-            # Extract the 'policy' path from the YAML file
+            # Use yq to extract the 'policy' field from the YAML file
             POLICY_PATH=$(yq '.policy' "$FILE")
 
+            # Warn if the 'policy' field is missing
             if [ -z "$POLICY_PATH" ] || [ "$POLICY_PATH" == "null" ]; then
-              echo "Missing or empty 'policy' field in $FILE"
+              echo "Missing 'policy' field in $FILE"
               STATUS=1
               continue
             fi
 
-            # Compute full path to the expected policy file
+            # Compute the full file path to the policy relative to the control YAML
             CONTROL_DIR=$(dirname "$FILE")
             FULL_POLICY_PATH="$CONTROL_DIR/$POLICY_PATH"
 
-            # Check if the policy file exists
+            # Check if the referenced policy file exists
             if [ ! -f "$FULL_POLICY_PATH" ]; then
-              echo "Policy file not found: $FULL_POLICY_PATH"
-              STATUS=
+              echo "Referenced policy file not found: $FULL_POLICY_PATH"
+              STATUS=1
+            else
+              echo "Policy exists: $FULL_POLICY_PATH"
+            fi
+          done
+
+
+          # Exit with error if any policy file was missing
+
+          exit $STATUS
