@@ -19,7 +19,7 @@ jobs:
 
     #Install yq to parse YAML
       - name: Install yq
-        run: >
+        run: |
           wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 
           -O yq
           chmod +x yq
@@ -30,7 +30,7 @@ jobs:
      
       #Print working directory and contents for debugging
       - name: Debug directory structure
-        run: >
+        run: |
           echo "Current dir: $(pwd)"
           echo "Contents:"
           ls -R
