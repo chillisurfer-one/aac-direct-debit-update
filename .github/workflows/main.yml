@@ -6,6 +6,7 @@ on:
   pull_request:
     paths:
       - aac-direct-debit-update/controls/**
+  workflow_dispatch:
 jobs:
   check-controls-exist:
     name: Validate Control Definitions and Code
