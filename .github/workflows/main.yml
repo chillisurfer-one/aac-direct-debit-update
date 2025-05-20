@@ -43,8 +43,9 @@ jobs:
       
       #Validate each control YAML has an existing policy file
       - name: Validate control code
-        run: >
+        run: |
           echo "Searching for all *-control.yaml files..."
+          pwd
 
 
           # Find all control YAML files recursively under /controls
@@ -52,7 +53,7 @@ jobs:
 
           # Fail if no control files are found
           if [ -z "$CONTROL_FILES" ]; then
-            echo "No control YAML files found under /controls"
+            echo "No control YAML files found under ./controls"
             exit 1
           fi
 
