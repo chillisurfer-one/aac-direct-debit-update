@@ -20,10 +20,9 @@ jobs:
     #Install yq to parse YAML
       - name: Install yq
         run: >
-          sudo wget
-          https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          -O /usr/bin/yq
-          sudo chmod +x /usr/bin/yq
+          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O yq
+          chmod +x yq
+          mv yq /usr/local/bin/yq
      
       #Print working directory and contents for debugging
       - name: Debug directory structure
