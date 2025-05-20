@@ -11,34 +11,41 @@ jobs:
   check-controls-exist:
     name: Validate Control Definitions and Code
     runs-on: ubuntu-latest
+
+    #Checkout the repository
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+    #Install yq to parse YAML
       - name: Install yq
         run: >
           sudo wget
           https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           -O /usr/bin/yq
-
           sudo chmod +x /usr/bin/yq
-      - name: Validate that all controls reference existing control code
+     
+      #Print working directory and contents for debugging
+      - name: Debug directory structure
+        run: >
+          echo "Current dir: $(pwd)"
+          echo "Contents:"
+          ls -R
+      
+      #Validate each control YAML has an existing policy file
+      - name: Validate control code
         run: >
           echo "Searching for all *-control.yaml files..."
 
 
           # Find all control YAML files recursively under /controls
-
-          CONTROL_FILES=$(find aac-direct-debit-update/controls -name
-          '*-control.yaml')
-
+          CONTROL_FILES=$(find controls -name '*-control.yaml')
 
           # Fail if no control files are found
-
           if [ -z "$CONTROL_FILES" ]; then
             echo "No control YAML files found under /controls"
             exit 1
           fi
-
 
           STATUS=0
 
