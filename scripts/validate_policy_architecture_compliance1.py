@@ -15,11 +15,17 @@ import time
 # Load environment variables from .env
 load_dotenv()
 
-AZURE_OPENAI_KEY = os.getenv("AZURE_OPENAI_KEY")
-AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
-DEPLOYMENT_NAME = os.getenv("DEPLOYMENT_NAME")
-OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION")
-OPENAI_API_TYPE = os.getenv("OPENAI_API_TYPE")
+# AZURE_OPENAI_KEY = os.getenv("AZURE_OPENAI_KEY")
+# AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
+# DEPLOYMENT_NAME = os.getenv("DEPLOYMENT_NAME")
+# OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION")
+# OPENAI_API_TYPE = os.getenv("OPENAI_API_TYPE")
+
+AZURE_OPENAI_KEY="d006a38de36a4421bb75c0ccf44ca5ec"
+AZURE_OPENAI_ENDPOINT="https://gpt-4-main.openai.azure.com/"
+DEPLOYMENT_NAME="gpt-4o"
+OPENAI_API_VERSION="2023-09-01-preview"
+OPENAI_API_TYPE="azure"
 
 # updated
 REPORT_OUTPUT_DIRECTORY = os.path.join("aac-direct-debit-update", "compliance-reports")
