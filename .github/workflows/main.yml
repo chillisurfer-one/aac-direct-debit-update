@@ -1,0 +1,68 @@
+name: Validate Code exists in Controls
+'on':
+  push:
+    paths:
+      - aac-direct-debit-update/controls/**
+  pull_request:
+    paths:
+      - aac-direct-debit-update/controls/**
+jobs:
+  check-controls-exist:
+    name: Ensure Controls Have Policy Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install yq
+        run: >
+          sudo wget
+          https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          -O /usr/bin/yq
+
+          sudo chmod +x /usr/bin/yq
+      - name: Validate that all controls have associated code
+        run: >
+          echo "Validating each control YAML has a 'policy' file that exists"
+
+
+          # Find all control definition YAML files
+
+          CONTROL_FILES=$(find aac-direct-debit-update/controls -name
+          '*-control.yaml')
+
+
+          # Exit if no control files are found
+
+          if [ -z "$CONTROL_FILES" ]; then
+            echo "No control YAML files found under /controls"
+            exit 1
+          fi
+
+
+          # Track validation status
+
+          STATUS=0
+
+
+          # Iterate over each found control YAML
+
+          for FILE in $CONTROL_FILES; do
+            echo "Checking $FILE"
+
+            # Extract the 'policy' path from the YAML file
+            POLICY_PATH=$(yq '.policy' "$FILE")
+
+            if [ -z "$POLICY_PATH" ] || [ "$POLICY_PATH" == "null" ]; then
+              echo "Missing or empty 'policy' field in $FILE"
+              STATUS=1
+              continue
+            fi
+
+            # Compute full path to the expected policy file
+            CONTROL_DIR=$(dirname "$FILE")
+            FULL_POLICY_PATH="$CONTROL_DIR/$POLICY_PATH"
+
+            # Check if the policy file exists
+            if [ ! -f "$FULL_POLICY_PATH" ]; then
+              echo "Policy file not found: $FULL_POLICY_PATH"
+              STATUS=
