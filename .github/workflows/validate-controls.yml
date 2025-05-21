@@ -33,12 +33,14 @@ jobs:
           # Find all control YAML files under /controls
           CONTROL_FILES=$(find ./controls -name '*-control.yaml')
 
-          # Exit if none are found
+          # Conditional output and exit if none found
           if [ -z "$CONTROL_FILES" ]; then
             echo "❌ No control YAML files found under ./controls"
             exit 1
+          else
+            echo "✔️ control YAML files found under ./controls"
           fi
-
+          
           # Print table header
           printf "\n%-50s | %-50s\n" "Control File" "Title"
           printf -- '%.0s-' {1..105}; echo
