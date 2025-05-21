@@ -53,12 +53,15 @@ jobs:
 
           # Fail if no control files are found
           if [ -z "$CONTROL_FILES" ]; then
-            echo "No control YAML files found under ./controls"
+             echo "❌ No control YAML files found under ./controls"
             exit 1
           fi
 
           STATUS=0
 
+            # Prepare the table header
+          printf "\n%-50s | %-8s | %-50s\n" "Control File" "Status" "Policy Path"
+          printf -- '%.0s-' {1..120};echo
 
           # Loop over each control YAML file
 
@@ -72,6 +75,7 @@ jobs:
             if [ -z "$POLICY_PATH" ] || [ "$POLICY_PATH" == "null" ]; then
               echo "Missing 'policy' field in $FILE"
               STATUS=1
+              printf "%-50s | ❌ Missing | %-50s\n" "$FILE" "null"
               continue
             fi
 
@@ -81,14 +85,15 @@ jobs:
 
             # Check if the referenced policy file exists
             if [ ! -f "$FULL_POLICY_PATH" ]; then
-              echo "Referenced policy file not found: $FULL_POLICY_PATH"
-              STATUS=1
+              printf "%-50s | ✅ Exists  | %-50s\n" "$FILE" "$POLICY_PATH"
             else
-              echo "Policy exists: $FULL_POLICY_PATH"
+              STATUS=1
+              printf "%-50s | ❌ Missing | %-50s\n" "$FILE" "$POLICY_PATH"
+             #echo "Policy exists: $FULL_POLICY_PATH"
             fi
           done
 
 
           # Exit with error if any policy file was missing
-
+          echo ""
           exit $STATUS
