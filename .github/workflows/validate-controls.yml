@@ -2,10 +2,10 @@ name: Validate Controls as Code Exist
 on:
   push:
     paths:
-      - aac-direct-debit-update/controls/**
+      - 'architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml'
   pull_request:
     paths:
-      - aac-direct-debit-update/controls/**
+      - 'architecture/**/*.puml'
   workflow_dispatch:
 jobs:
   check-controls-exist:
