@@ -1,12 +1,13 @@
 name: Check ADR Existence
-'on':
+
+on:
   push:
-    branches:
-      - main
+    paths:
+      - 'architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml'
   pull_request:
-    branches:
-      - main
-  workflow_dispatch: null
+    paths:
+      - 'architecture/**/*.puml'
+  workflow_dispatch:
 jobs:
   check-adr:
     runs-on: ubuntu-latest
