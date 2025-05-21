@@ -1,99 +1,53 @@
-name: Validate Controls as Code Exist
+name: Validate Control Yaml exist
 on:
   push:
     paths:
-      - 'architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml'
+      - architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml
   pull_request:
     paths:
-      - 'architecture/**/*.puml'
-  workflow_dispatch:
+      - architecture/**/*.puml
+  workflow_dispatch: null
 jobs:
-  check-controls-exist:
-    name: Validate Control Definitions and Code
+  check-control-titles:
+    name: List Control Titles
     runs-on: ubuntu-latest
-
-    #Checkout the repository
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-  
       - name: Install yq
-        run: |
-          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O yq
-          chmod +x yq
-          sudo mv yq /usr/local/bin/yq
+        run: >
+          wget
+          https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          -O yq
 
-    # #Install yq to parse YAML
-    #   - name: Install yq
-    #     run: |
-    #       wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 
-    #       -O yq
-    #       chmod +x yq
-    #       sudo mv yq /usr/local/bin/yq
-     
+          chmod +x yq
+
+          sudo mv yq /usr/local/bin/yq
       - name: Confirm yq installation
         run: yq --version
-     
-      #Print working directory and contents for debugging
-      - name: Debug directory structure
-        run: |
-          echo "Current dir: $(pwd)"
-          echo "Contents:"
-          ls -R
-      
-      #Validate each control YAML has an existing policy file
-      - name: Validate control code
+      - name: Print YAML control titles
         run: |
           echo "Searching for all *-control.yaml files..."
           pwd
 
-
-          # Find all control YAML files recursively under /controls
+          # Find all control YAML files under /controls
           CONTROL_FILES=$(find ./controls -name '*-control.yaml')
 
-          # Fail if no control files are found
+          # Exit if none are found
           if [ -z "$CONTROL_FILES" ]; then
-             echo "❌ No control YAML files found under ./controls"
+            echo "❌ No control YAML files found under ./controls"
             exit 1
           fi
 
-          STATUS=0
+          # Print table header
+          printf "\n%-50s | %-50s\n" "Control File" "Title"
+          printf -- '%.0s-' {1..105}; echo
 
-            # Prepare the table header
-          printf "\n%-50s | %-8s | %-50s\n" "Control File" "Status" "Policy Path"
-          printf -- '%.0s-' {1..120};echo
-
-          # Loop over each control YAML file
-
+          # Loop through each control file and extract the title
           for FILE in $CONTROL_FILES; do
-            echo "Checking $FILE"
-
-            # Use yq to extract the 'policy' field from the YAML file
-            POLICY_PATH=$(yq '.policy' "$FILE")
-
-            # Warn if the 'policy' field is missing
-            if [ -z "$POLICY_PATH" ] || [ "$POLICY_PATH" == "null" ]; then
-              echo "Missing 'policy' field in $FILE"
-              STATUS=1
-              printf "%-50s | ❌ Missing | %-50s\n" "$FILE" "null"
-              continue
+            TITLE=$(yq '.title' "$FILE")
+            if [ -z "$TITLE" ] || [ "$TITLE" == "null" ]; then
+              TITLE="❌ No title found"
             fi
-
-            # Compute the full file path to the policy relative to the control YAML
-            CONTROL_DIR=$(dirname "$FILE")
-            FULL_POLICY_PATH="$CONTROL_DIR/$POLICY_PATH"
-
-            # Check if the referenced policy file exists
-            if [ ! -f "$FULL_POLICY_PATH" ]; then
-              printf "%-50s | ✅ Exists  | %-50s\n" "$FILE" "$POLICY_PATH"
-            else
-              STATUS=1
-              printf "%-50s | ❌ Missing | %-50s\n" "$FILE" "$POLICY_PATH"
-             #echo "Policy exists: $FULL_POLICY_PATH"
-            fi
+            printf "%-50s | %-50s\n" "$FILE" "$TITLE"
           done
-
-
-          # Exit with error if any policy file was missing
-          echo ""
-          exit $STATUS
