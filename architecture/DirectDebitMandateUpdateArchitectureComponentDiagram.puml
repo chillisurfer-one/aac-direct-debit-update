@@ -9,7 +9,7 @@ skinparam ArrowColor #4A90E2
 skinparam componentStyle rectangle
 skinparam Shadowing true
 
-' === Legend ===
+' === Legend ====
 legend
 |= Color |= Meaning |
 | #LightBlue | External System |
