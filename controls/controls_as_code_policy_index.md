@@ -1,5 +1,5 @@
 
-# ✅ Controls as Code (CaC) – Policy Index
+# ✅ Controls as Code (CaC) – Controls Index
 
 This document captures the full list of **Controls as Code** implemented (or planned) to enforce secure, modular, and compliant software delivery for the **Direct Debit Mandate Update Microservice**.
 
