@@ -20,6 +20,6 @@ This document defines a set of **Architecture as Code (AaC)** policies for valid
 
 ---
 
-Each policy has a corresponding Rego file, test input, and CI enforcement path inside the `/policies/architecture` directory.
+Each policy has a corresponding Rego file, test input, and CI enforcement path inside the `/policies` directory.
 
 Policies are traceable to Architecture Decision Records (ADRs) where applicable.
