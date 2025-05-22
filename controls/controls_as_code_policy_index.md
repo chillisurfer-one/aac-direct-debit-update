@@ -45,5 +45,4 @@ This document captures the full list of **Controls as Code** implemented (or pla
 
 ---
 
-Each control will be mapped to its implementation and enforcement test in `/controls/{security|architecture|infra}/` folders.  
-Waiver exceptions and expirations will be tracked in `/adr/waivers/`.
+Waiver exceptions and expirations will be tracked in `/waivers/`.
