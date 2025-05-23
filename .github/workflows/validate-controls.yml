@@ -1,11 +1,11 @@
 name: Validate Control Yaml exist
 on:
   push:
-    paths:
-      - architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml
+   # paths:
+    #  - architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml
   pull_request:
-    paths:
-      - architecture/**/*.puml
+  #  paths:
+   #   - architecture/**/*.puml
   workflow_dispatch: null
 jobs:
   check-control-titles:
