@@ -1,5 +1,6 @@
 name: Mark PR as Ready for Review
 
+# Trigger this workflow when any of the three listed workflows finish
 on:
   workflow_run:
     workflows:
@@ -11,17 +12,66 @@ on:
 
 jobs:
   mark-ready:
+    # Only run if the workflow that just completed was successful
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get PR number from workflow_run
-        id: get_pr
+      # Step 1: Extract the PR number and commit SHA from the triggering workflow
+      - name: Get PR number and commit SHA
+        id: get_info
         run: |
+          # Extract PR number from the workflow_run event payload
           echo "PR_NUMBER=$(jq '.[0].number' <<< '${{ toJson(github.event.workflow_run.pull_requests) }}')" >> $GITHUB_ENV
+          
+          # Get the commit SHA the workflow ran on
+          echo "COMMIT_SHA=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_ENV
 
-      - name: Mark PR as Ready for Review
+      # Step 2: Install GitHub CLI so we can query workflow run statuses
+      - name: Install GitHub CLI
         run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+
+      # Step 3: Check status of all three required workflows for the same commit
+      - name: Check status of all workflows
+        id: check_statuses
+        run: |
+          echo "Checking workflow run statuses for commit $COMMIT_SHA"
+
+          # Check conclusion of each workflow by name and commit SHA
+          STATUS_ADR=$(gh run list --json name,status,conclusion,headSha -L 10 \
+            --workflow="Check ADR Existence" | jq -r '.[] | select(.headSha == env.COMMIT_SHA) | .conclusion')
+
+          STATUS_YAML=$(gh run list --json name,status,conclusion,headSha -L 10 \
+            --workflow="Validate Control Yaml exist" | jq -r '.[] | select(.headSha == env.COMMIT_SHA) | .conclusion')
+
+          STATUS_POLICY=$(gh run list --json name,status,conclusion,headSha -L 10 \
+            --workflow="Validate Policy-Architecture Compliance" | jq -r '.[] | select(.headSha == env.COMMIT_SHA) | .conclusion')
+
+          # Output for visibility
+          echo "ADR: $STATUS_ADR"
+          echo "YAML: $STATUS_YAML"
+          echo "POLICY: $STATUS_POLICY"
+
+          # Mark success only if all workflows succeeded
+          if [[ "$STATUS_ADR" == "success" && "$STATUS_YAML" == "success" && "$STATUS_POLICY" == "success" ]]; then
+            echo "ALL_PASSED=true" >> $GITHUB_ENV
+          else
+            echo "Not all workflows passed. Skipping PR update."
+            echo "ALL_PASSED=false" >> $GITHUB_ENV
+          fi
+        env:
+          COMMIT_SHA: ${{ env.COMMIT_SHA }}
+        shell: bash
+
+      # Step 4: Mark PR as ready for review if all workflows succeeded
+      - name: Mark PR as Ready for Review
+        if: env.ALL_PASSED == 'true'
+        run: |
+          echo "Marking PR #${PR_NUMBER} as ready for review"
+          
+          # Use GitHub API to update PR and mark it as non-draft
           curl -s -X PATCH \
             -H "Authorization: token ${{ secrets.PAT_REPO_WRITE }}" \
             -H "Accept: application/vnd.github.shadow-cat-preview+json" \
