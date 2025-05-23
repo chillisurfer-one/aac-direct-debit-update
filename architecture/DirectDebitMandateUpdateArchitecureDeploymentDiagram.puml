@@ -1,79 +1,48 @@
-@startuml DirectDebitDeploymentDiagram
-' === Styling ===
+@startuml DirectDebitMandateUpdateDeployment
 skinparam backgroundColor #F9F9F9
-skinparam shadowing true
-skinparam componentStyle rectangle
-skinparam node {
-  BackgroundColor #FFFFFF
-  BorderColor #000000
-  FontName Consolas
-}
+skinparam defaultFontName "Consolas"
 skinparam ArrowColor #4A90E2
-
-title Direct Debit Mandate Update Microservice – Deployment View
+skinparam componentStyle rectangle
+skinparam Shadowing true
 
 ' === Legend ===
-legend
-|= Tag |= Meaning |
-| <<aws>> | AWS-managed Service |
-| <<container>> | Deployed Application |
-| <<external>> | Third-party System |
+legend top left
+|= Color |= Meaning |
+| #LightBlue | External System |
+| #Green | Application Deployment |
+| #Yellow | Data Store |
+| #Orange | AWS Managed Service |
 endlegend
 
-' === External Client ===
-actor "CRM or Client Portal" as Client #LightBlue
+' === Nodes ===
+node "ClientApp\n(CRM / Portal)" as ClientApp #LightBlue
 
-' === AWS Infrastructure ===
-node "AWS VPC (10.0.0.0/16)" <<aws>> {
-  
-  node "Public Subnet (10.0.1.0/24)" {
-    node "Application Load Balancer" as ALB <<aws>> {
-      [HTTP Listener (Port 80)]
-    }
+node "AWS Cloud" {
+  node "Amazon API Gateway" as ApiGateway #Orange
+  node "Secrets Manager" as Secrets #Orange
+  node "CloudWatch" as Monitoring #Orange
+
+  node "ECS Fargate Cluster" {
+    component "MandateUpdateController\n(Spring Boot)" as WebAPI #Green
+    component "MandateUpdateService\n(Spring Logic)" as ServiceLayer #Green
+    component "VaultCoreClient\n(Adapter)" as AdapterClient #Green
   }
 
-  node "Private Subnet (10.0.11.0/24)" {
-    node "ECS Fargate Task" <<container>> {
-      component "MandateUpdateController\n(Spring Boot)" as Controller
-    }
-
-    node "Secrets Manager" <<aws>> {
-      database "DB/API Credentials" as Secrets
-    }
-
-    node "CloudWatch Logs" <<aws>> {
-      [Service Logs]
-    }
-
-    node "RDS PostgreSQL" <<aws>> {
-      database "AuditLogDB" as Audit
-    }
-  }
+  database "Audit Log\n(Amazon RDS PostgreSQL)" as AuditStore #Yellow
 }
 
-' === Vault Core External ===
-node "Thought Machine\nVault Core API" as VaultCore <<external>> #LightBlue
+node "Thought Machine\nVault Core API" as ThoughtMachine #LightBlue
 
 ' === Relationships ===
-Client --> [HTTP Listener (Port 80)] : HTTP Request (POST /mandate/update)
-[HTTP Listener (Port 80)] --> Controller : Forwards via target group
-Controller --> Secrets : Retrieves DB/API credentials
-Controller --> VaultCore : Sends mandate update
-Controller --> Audit : Writes audit logs (JDBC)
-Controller --> [Service Logs] : Writes logs
-VaultCore --> Controller : 200 OK / 4xx
+ClientApp --> ApiGateway : HTTPS / JSON
+ApiGateway --> WebAPI : HTTP Route
+WebAPI --> ServiceLayer : Delegate Request
+ServiceLayer --> AdapterClient : External Call
+AdapterClient --> ThoughtMachine : HTTPS + OAuth2
 
-' === Compliance Notes ===
-note right of Controller
-  <<Tier 1 Service>>
-  OAuth2 Auth, Handles PII
-  Logs & Secrets are encrypted
-end note
-
-note bottom of Audit
-  <<GDPR Zone>>
-  7-Year Retention Policy
-  Encrypted at Rest
-end note
+WebAPI --> Secrets : Reads Secrets (IAM)
+ServiceLayer --> Monitoring : Logs, Metrics
+AdapterClient --> Monitoring : Retry Logs
+ServiceLayer --> AuditStore : Audit JDBC Write
 
 @enduml
