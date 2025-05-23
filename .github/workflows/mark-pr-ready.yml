@@ -1,0 +1,29 @@
+name: Mark PR as Ready for Review
+
+on:
+  workflow_run:
+    workflows:
+      - "Check ADR Existence"
+      - "Validate Control Yaml exist"
+      - "Validate Policy-Architecture Compliance"
+    types:
+      - completed
+
+jobs:
+  mark-ready:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get PR number from workflow_run
+        id: get_pr
+        run: |
+          echo "PR_NUMBER=$(jq '.[0].number' <<< '${{ toJson(github.event.workflow_run.pull_requests) }}')" >> $GITHUB_ENV
+
+      - name: Mark PR as Ready for Review
+        run: |
+          curl -s -X PATCH \
+            -H "Authorization: token ${{ secrets.PAT_REPO_WRITE }}" \
+            -H "Accept: application/vnd.github.shadow-cat-preview+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ env.PR_NUMBER }} \
+            -d '{"draft": false}'
