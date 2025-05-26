@@ -38,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report
-          path: aac-direct-debit-update/compliance-reports/validate_iac_deployment_architecture.py_*.md
+          path: aac-direct-debit-update/compliance-reports/validate_iac_deployment_architecture_report.md
