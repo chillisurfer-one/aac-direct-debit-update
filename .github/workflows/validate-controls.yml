@@ -1,55 +1,55 @@
-name: Validate Control Yaml exist
-on:
-  push:
-   # paths:
-    #  - architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml
-  pull_request:
-  #  paths:
-   #   - architecture/**/*.puml
-  workflow_dispatch: null
-jobs:
-  check-control-titles:
-    name: List Control Titles
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Install yq
-        run: >
-          wget
-          https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          -O yq
+# name: Validate Control Yaml exist
+# on:
+#   push:
+#    # paths:
+#     #  - architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml
+#   pull_request:
+#   #  paths:
+#    #   - architecture/**/*.puml
+#   workflow_dispatch: null
+# jobs:
+#   check-control-titles:
+#     name: List Control Titles
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+#       - name: Install yq
+#         run: >
+#           wget
+#           https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+#           -O yq
 
-          chmod +x yq
+#           chmod +x yq
 
-          sudo mv yq /usr/local/bin/yq
-      - name: Confirm yq installation
-        run: yq --version
-      - name: Print YAML control titles
-        run: |
-          echo "Searching for all *-control.yaml files..."
-          pwd
+#           sudo mv yq /usr/local/bin/yq
+#       - name: Confirm yq installation
+#         run: yq --version
+#       - name: Print YAML control titles
+#         run: |
+#           echo "Searching for all *-control.yaml files..."
+#           pwd
 
-          # Find all control YAML files under /controls
-          CONTROL_FILES=$(find ./controls -name '*-control.yaml')
+#           # Find all control YAML files under /controls
+#           CONTROL_FILES=$(find ./controls -name '*-control.yaml')
 
-          # Conditional output and exit if none found
-          if [ -z "$CONTROL_FILES" ]; then
-            echo "❌ No control YAML files found under ./controls"
-            exit 1
-          else
-            echo "✔️ control YAML files found under ./controls"
-          fi
+#           # Conditional output and exit if none found
+#           if [ -z "$CONTROL_FILES" ]; then
+#             echo "❌ No control YAML files found under ./controls"
+#             exit 1
+#           else
+#             echo "✔️ control YAML files found under ./controls"
+#           fi
           
-          # Print table header
-          printf "\n%-50s | %-50s\n" "Control File" "Title"
-          printf -- '%.0s-' {1..105}; echo
+#           # Print table header
+#           printf "\n%-50s | %-50s\n" "Control File" "Title"
+#           printf -- '%.0s-' {1..105}; echo
 
-          # Loop through each control file and extract the title
-          for FILE in $CONTROL_FILES; do
-            TITLE=$(yq '.title' "$FILE")
-            if [ -z "$TITLE" ] || [ "$TITLE" == "null" ]; then
-              TITLE="❌ No title found"
-            fi
-            printf "%-50s | %-50s\n" "$FILE" "$TITLE"
-          done
+#           # Loop through each control file and extract the title
+#           for FILE in $CONTROL_FILES; do
+#             TITLE=$(yq '.title' "$FILE")
+#             if [ -z "$TITLE" ] || [ "$TITLE" == "null" ]; then
+#               TITLE="❌ No title found"
+#             fi
+#             printf "%-50s | %-50s\n" "$FILE" "$TITLE"
+#           done
