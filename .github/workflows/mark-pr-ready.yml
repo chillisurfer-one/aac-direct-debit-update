@@ -100,7 +100,7 @@ jobs:
     needs:
       - check-adr
       - check-control-yaml
-      - validate-policy
+
     if: github.event.pull_request.draft == true && github.head_ref == 'develop'
     steps:
       - name: Mark PR as Ready
