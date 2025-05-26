@@ -23,6 +23,12 @@ OPENAI_API_TYPE="azure"
 # Hardcoded output directory for the report
 #REPORT_OUTPUT_DIRECTORY = r"C:\Users\TAMANNAJANGID\Desktop\Natwest POC\Task-2/report3"
 
+# Define the report output directory
+REPORT_OUTPUT_DIRECTORY = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "compliance-reports"
+)
+
+
 def clone_repo(repo_url, target_dir=None):
     """Clone a GitHub repository to a specified directory or a temporary directory"""
     if target_dir is None:
