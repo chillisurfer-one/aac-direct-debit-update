@@ -107,8 +107,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PAT_REPO_WRITE }}
         run: >
-          echo "Marking PR #${{ github.event.pull_request.number }} as ready for
-          review..." &&
+          echo "Marking PR #${{ github.event.pull_request.number }} as ready for review..."
           
           curl -s -X PATCH \
           -H "Authorization: Bearer $GH_TOKEN" \
