@@ -2,7 +2,7 @@
 
 !include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
 
-' === Styling ======
+' === Styling ============
 skinparam backgroundColor #F9F9F9
 skinparam defaultFontName "Consolas"
 skinparam ArrowColor #4A90E2
