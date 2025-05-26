@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - architecture/**/*.puml
-  workflow_dispatch: null
+  workflow_dispatch:
 jobs:
   check-adr:
     name: ✅ Check ADR Files
