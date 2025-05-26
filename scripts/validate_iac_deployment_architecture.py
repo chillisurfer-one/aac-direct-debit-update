@@ -20,14 +20,6 @@ DEPLOYMENT_NAME="gpt-4o"
 OPENAI_API_VERSION="2023-09-01-preview"
 OPENAI_API_TYPE="azure"
 
-# Ensure output directory exists
-output_dir = "aac-direct-debit-update/compliance-reports"
-os.makedirs(output_dir, exist_ok=True)
-
-# Construct filename with timestamp (matches *.md pattern)
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-report_path = os.path.join(output_dir, f"validate_iac_deployment_architecture.py_{timestamp}.md")
-
 # Hardcoded output directory for the report
 #REPORT_OUTPUT_DIRECTORY = r"C:\Users\TAMANNAJANGID\Desktop\Natwest POC\Task-2/report3"
 
@@ -528,14 +520,45 @@ def main(github_repo_url):
             except Exception as e:
                 pass
 
+# if __name__ == "__main__":
+#     # Replace with your GitHub repository URL
+#     github_repo_url = "https://github.com/chillisurfer-one/aac-direct-debit-update"
+#     success, has_deviations = main(github_repo_url)
+
+#     if has_deviations:
+#         # Exit with code 1 if deviations were found
+#         sys.exit(1)
+#     else:
+#         # Exit with code 0 if no deviations were found
+#         sys.exit(0)
+
 if __name__ == "__main__":
+    import os
+    import sys
+
     # Replace with your GitHub repository URL
     github_repo_url = "https://github.com/chillisurfer-one/aac-direct-debit-update"
     success, has_deviations = main(github_repo_url)
 
-    if has_deviations:
-        # Exit with code 1 if deviations were found
-        sys.exit(1)
-    else:
-        # Exit with code 0 if no deviations were found
-        sys.exit(0)
+    # --- Report Generation ---
+    report_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
+    os.makedirs(report_dir, exist_ok=True)
+
+    report_path = os.path.join(report_dir, "validate_iac_deployment_architecture_report.md")
+
+    with open(report_path, "w") as report_file:
+        report_file.write("# IaC Policy Compliance Report\n\n")
+        if has_deviations:
+            report_file.write("❌ Deviations found in Terraform modules vs deployment architecture.\n")
+        else:
+            report_file.write("✅ Validation successful. All modules are compliant with the architecture.\n")
+
+    # Print report content to GitHub Actions console
+    print("\n--- Generated IaC Compliance Report ---")
+    with open(report_path, "r") as report_file:
+        print(report_file.read())
+    print("--- End of Report ---\n")
+    # --- End Report Generation ---
+
+    # Set exit code based on validation result
+    sys.exit(1 if has_deviations else 0)
