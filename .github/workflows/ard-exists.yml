@@ -1,4 +1,4 @@
-# name: Check ADR Existence
+name: Check ADR Existence
 
 # on:
 #   push:
