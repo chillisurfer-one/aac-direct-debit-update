@@ -1,26 +1,26 @@
-name: Check ADR Existence
+# name: Check ADR Existence
 
 # on:
 #   push:
-#    # paths:
-#       #- 'architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml'
+#     paths:
+#       - 'architecture/DirectDebitMandateUpdateArchitectureComponentDiagram.puml'
 #   pull_request:
-#    # paths:
-#      # - 'architecture/**/*.puml'
-  workflow_dispatch:
-jobs:
-  check-adr:
-    runs-on: ubuntu-latest
-    name: Verify ADRs exist
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Check for ADR files
-        run: |
-          if ls adr/*.md 1> /dev/null 2>&1; then
-            echo "ADR files found."
-          else
-            echo "No ADR files found in the adr/ directory."
-            exit 1
-          fi
-          echo "Exit status: $?"
+#     paths:
+#       - 'architecture/**/*.puml'
+#   workflow_dispatch:
+# jobs:
+#   check-adr:
+#     runs-on: ubuntu-latest
+#     name: Verify ADRs exist
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+#       - name: Check for ADR files
+#         run: |
+#           if ls adr/*.md 1> /dev/null 2>&1; then
+#             echo "ADR files found."
+#           else
+#             echo "No ADR files found in the adr/ directory."
+#             exit 1
+#           fi
+#           echo "Exit status: $?"
