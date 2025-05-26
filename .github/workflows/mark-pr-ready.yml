@@ -1,4 +1,4 @@
-name: PR Validation and Mark Ready
+name: Validate architecture for Policy
 on:
   pull_request:
     types:
