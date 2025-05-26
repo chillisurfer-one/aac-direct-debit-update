@@ -67,6 +67,7 @@ jobs:
             TITLE="${TITLE:-❌ No title found}"
             printf "%-50s | %-50s\n" "$FILE" "$TITLE"
           done
+  #Validating Policy code is commented for now, no wf will be triggered
   # validate-policy:
   #   name: ✅ Policy-Architecture Compliance
   #   runs-on: ubuntu-latest
