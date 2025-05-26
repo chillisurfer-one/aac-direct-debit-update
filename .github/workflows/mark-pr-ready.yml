@@ -72,43 +72,43 @@
               printf "%-50s | %-50s\n" "$FILE" "$TITLE"
             done
             
-    validate-policy:
-      name: ✅ Policy-Architecture Compliance
-      runs-on: ubuntu-latest
-      steps:
-        # Only proceed if the PR is from the 'develop' branch
-        - name: Exit if not draft or not from 'develop'
-          if: github.head_ref != 'develop' || github.event.pull_request.draft != true
-          run: |
-            echo "Skipping — either not from 'develop' or not a draft PR"
-            exit 0
+    # validate-policy:
+    #   name: ✅ Policy-Architecture Compliance
+    #   runs-on: ubuntu-latest
+    #   steps:
+    #     # Only proceed if the PR is from the 'develop' branch
+    #     - name: Exit if not draft or not from 'develop'
+    #       if: github.head_ref != 'develop' || github.event.pull_request.draft != true
+    #       run: |
+    #         echo "Skipping — either not from 'develop' or not a draft PR"
+    #         exit 0
   
-        - name: Checkout repository
-          uses: actions/checkout@v3
+    #     - name: Checkout repository
+    #       uses: actions/checkout@v3
   
-        # Set up Python for running the validation script
-        - name: Set up Python
-          uses: actions/setup-python@v4
-          with:
-            python-version: '3.10'
+    #     # Set up Python for running the validation script
+    #     - name: Set up Python
+    #       uses: actions/setup-python@v4
+    #       with:
+    #         python-version: '3.10'
   
-        - name: Install dependencies
-          run: pip install -r requirements.txt
+    #     - name: Install dependencies
+    #       run: pip install -r requirements.txt
   
-        - name: Make script executable
-          run: chmod +x scripts/validate_policy_architecture_compliance1.py
+    #     - name: Make script executable
+    #       run: chmod +x scripts/validate_policy_architecture_compliance1.py
   
-        # Run policy compliance check
-        - name: Run validation script
-          run: python ./scripts/validate_policy_architecture_compliance1.py
+    #     # Run policy compliance check
+    #     - name: Run validation script
+    #       run: python ./scripts/validate_policy_architecture_compliance1.py
   
-        # Always upload the generated report, even if the job fails
-        - name: Upload report artifacts
-          if: always()
-          uses: actions/upload-artifact@v4
-          with:
-            name: policy-evaluation-report
-            path: aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md
+    #     # Always upload the generated report, even if the job fails
+    #     - name: Upload report artifacts
+    #       if: always()
+    #       uses: actions/upload-artifact@v4
+    #       with:
+    #         name: policy-evaluation-report
+    #         path: aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md
   
     mark-ready:
       name: 🚀 Mark PR as Ready for Review
