@@ -106,14 +106,15 @@ jobs:
       - name: Mark PR as Ready
         env:
           GH_TOKEN: ${{ secrets.PAT_REPO_WRITE }}
-        run: >
+        run: |
           echo "Marking PR #${{ github.event.pull_request.number }} as ready for review..."
           
-          curl -s -X PATCH \
+          curl -v -s -X PATCH \
           -H "Authorization: Bearer $GH_TOKEN" \
           -H "Accept: application/vnd.github+json" \
           https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} \
           -d '{"draft": false}'
+
           
           # curl -v -s -X PATCH \
           #   -H "Authorization: token ${{ secrets.PAT_REPO_WRITE }}" \
