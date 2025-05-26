@@ -13,14 +13,23 @@ from langchain.schema import HumanMessage, SystemMessage
 from textwrap import dedent
 
 
+
 AZURE_OPENAI_KEY="d006a38de36a4421bb75c0ccf44ca5ec"
 AZURE_OPENAI_ENDPOINT="https://gpt-4-main.openai.azure.com/"
 DEPLOYMENT_NAME="gpt-4o"
 OPENAI_API_VERSION="2023-09-01-preview"
 OPENAI_API_TYPE="azure"
 
+# Ensure output directory exists
+output_dir = "aac-direct-debit-update/compliance-reports"
+os.makedirs(output_dir, exist_ok=True)
+
+# Construct filename with timestamp (matches *.md pattern)
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+report_path = os.path.join(output_dir, f"validate_iac_deployment_architecture.py_{timestamp}.md")
+
 # Hardcoded output directory for the report
-REPORT_OUTPUT_DIRECTORY = r"C:\Users\TAMANNAJANGID\Desktop\Natwest POC\Task-2/report3"
+#REPORT_OUTPUT_DIRECTORY = r"C:\Users\TAMANNAJANGID\Desktop\Natwest POC\Task-2/report3"
 
 def clone_repo(repo_url, target_dir=None):
     """Clone a GitHub repository to a specified directory or a temporary directory"""
