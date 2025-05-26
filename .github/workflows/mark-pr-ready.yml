@@ -1,4 +1,4 @@
-name: Validate architecture for Policy
+name: Validate architecture aligned to Policy
 on:
   pull_request:
     types:
