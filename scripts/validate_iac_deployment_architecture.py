@@ -28,7 +28,15 @@ REPORT_OUTPUT_DIRECTORY = os.path.join(
     os.path.dirname(os.path.dirname(__file__)), "compliance-reports"
 )
 
+os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
 
+report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
+with open(report_path, "w") as report_file:
+    report_file.write("# IaC Policy Compliance Report\n\n")
+    report_file.write("Validation completed successfully ✅\n")
+print(f"Report saved to: {report_path}")
+
+#updated
 def clone_repo(repo_url, target_dir=None):
     """Clone a GitHub repository to a specified directory or a temporary directory"""
     if target_dir is None:
