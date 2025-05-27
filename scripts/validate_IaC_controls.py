@@ -432,11 +432,13 @@ def analyze_policy_deviations(module_name: str, module_content: Dict[str, str],
 def generate_report(mapping_results: List[Dict[str, Any]],
                    deviation_results: List[Dict[str, Any]],
                    repo_name: str):
+
+        
     """Generate comprehensive INFRA control mapping and deviation report"""
     if not os.path.exists(REPORT_OUTPUT_DIRECTORY):
         os.makedirs(REPORT_OUTPUT_DIRECTORY)
     
-    report_filename = f"{repo_name}_infra_control_analysis.md"
+    report_filename = "infra_control_analysis.md"
     report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, report_filename)
 
     with open(report_path, "w", encoding="utf-8") as f:
@@ -624,6 +626,17 @@ def main(github_repo_url):
 
 if __name__ == "__main__":
     repo_url = "https://github.com/chillisurfer-one/aac-direct-debit-update"
+
+    # Generate final report
+generate_report(mapping_results, deviation_results, repo_name)
+
+# Print the generated report content to GitHub Actions console logs
+report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "infra_control_analysis.md")
+if os.path.exists(report_path):
+    print("\n===== INFRA Control Policy Analysis Report =====\n")
+    with open(report_path, "r", encoding="utf-8") as report_file:
+        print(report_file.read())
+    print("\n===== End of Report =====\n")
 
     if not repo_url:
         print("Please provide a valid GitHub repository URL.")
