@@ -1,4 +1,4 @@
-name: Validate Iac aligned with deployment arch
+name: Validate IaC aligned with deployment arch
 
 on:
   pull_request:
@@ -7,12 +7,12 @@ on:
     branches:
       - main
     paths:
-     -aac-direct-debit-update/infrastructure/**
+     - aac-direct-debit-update/infrastructure/**
   workflow_dispatch:
 
 jobs:
   Validate-terraform-deploymentarch:
-    name: ✅ Iac-DeploymentArchitecture Compliance
+    name: ✅ IaC-DeploymentArchitecture Compliance
     runs-on: ubuntu-latest
 
     steps:
@@ -38,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report
-          path: aac-direct-debit-update/compliance-reports/terraform_compliance_report.md
+          path: compliance-reports/terraform_compliance_report.md
