@@ -581,9 +581,9 @@ if __name__ == "__main__":
     print(f"::notice::📄 Report successfully generated at: {report_path}")
 
     with open(report_path, "r") as report_file:
-    print("::group::🔍 Terraform Compliance Report")
-    print(report_file.read())
-    print("::endgroup::")
+        print("::group::🔍 Terraform Compliance Report")
+        print(report_file.read())
+        print("::endgroup::")
     # --- End Report Generation ---
 
     # Set exit code based on validation result
