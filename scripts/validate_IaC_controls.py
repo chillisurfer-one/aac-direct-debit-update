@@ -433,7 +433,10 @@ def generate_report(mapping_results: List[Dict[str, Any]],
                    deviation_results: List[Dict[str, Any]],
                    repo_name: str):
 
-        
+    def write_and_print(f, text=""):
+    f.write(text + "\n")
+    print(text)
+                       
     """Generate comprehensive INFRA control mapping and deviation report"""
     if not os.path.exists(REPORT_OUTPUT_DIRECTORY):
         os.makedirs(REPORT_OUTPUT_DIRECTORY)
@@ -442,14 +445,14 @@ def generate_report(mapping_results: List[Dict[str, Any]],
     report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, report_filename)
 
     with open(report_path, "w", encoding="utf-8") as f:
-        f.write(f"# INFRA Control Policy Analysis Report\n\n")
-        f.write(f"**Analysis Date**: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+        write_and_print(f"# INFRA Control Policy Analysis Report\n\n")
+        write_and_print(f"**Analysis Date**: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
         
         # Control Mapping Section
-        f.write("## 1. INFRA Control Policy Mapping\n\n")
+        write_and_print("## 1. INFRA Control Policy Mapping\n\n")
         if mapping_results:
-            f.write("| Module Name | INFRA Control | Implementation Evidence |\n")
-            f.write("|-------------|---------------|-------------------------|\n")
+            write_and_print("| Module Name | INFRA Control | Implementation Evidence |\n")
+            write_and_print("|-------------|---------------|-------------------------|\n")
             
             for result in mapping_results:
                 module_name = result.get('module_name', 'Unknown')
@@ -626,17 +629,6 @@ def main(github_repo_url):
 
 if __name__ == "__main__":
     repo_url = "https://github.com/chillisurfer-one/aac-direct-debit-update"
-
-    # Generate final report
-generate_report(mapping_results, deviation_results, repo_name)
-
-# Print the generated report content to GitHub Actions console logs
-report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "infra_control_analysis.md")
-if os.path.exists(report_path):
-    print("\n===== INFRA Control Policy Analysis Report =====\n")
-    with open(report_path, "r", encoding="utf-8") as report_file:
-        print(report_file.read())
-    print("\n===== End of Report =====\n")
 
     if not repo_url:
         print("Please provide a valid GitHub repository URL.")
