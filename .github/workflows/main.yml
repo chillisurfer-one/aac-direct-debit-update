@@ -33,9 +33,12 @@ jobs:
       - name: Run validation script
         run: python ./scripts/validate_IaC_controls.py
 
+      - name: Debug – List report files
+        run: ls -l aac-direct-debit-update/compliance-reports || echo "Directory not found"
+
       - name: Upload report artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report
-          path: compliance-reports/infra_control_analysis.md
+          path: aac-direct-debit-update/compliance-reports/IaC_control_analysis.md
