@@ -434,8 +434,8 @@ def generate_report(mapping_results: List[Dict[str, Any]],
                    repo_name: str):
 
     def write_and_print(f, text=""):
-    f.write(text + "\n")
-    print(text)
+        f.write(text + "\n")
+        print(text)
                        
     """Generate comprehensive INFRA control mapping and deviation report"""
     if not os.path.exists(REPORT_OUTPUT_DIRECTORY):
