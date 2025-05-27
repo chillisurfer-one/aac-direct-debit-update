@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 resource "aws_ecs_cluster" "this" {
-  name = "${var.name_prefix}-ecs-cluster"
+  name = "${var.name_prefix1}-ecs-cluster"
   tags = var.tags
 }
 
