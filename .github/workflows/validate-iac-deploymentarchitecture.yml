@@ -1,4 +1,4 @@
-name: Validate IaC is aligned
+name: Validate IaC is aligned to deployment arch
 
 on:
   pull_request:
