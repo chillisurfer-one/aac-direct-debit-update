@@ -36,7 +36,7 @@ with open(report_path, "w") as report_file:
     report_file.write("Validation completed successfully ✅\n")
 print(f"Report saved to: {report_path}")
 
-#updated
+# end of update
 def clone_repo(repo_url, target_dir=None):
     """Clone a GitHub repository to a specified directory or a temporary directory"""
     if target_dir is None:
@@ -568,10 +568,15 @@ if __name__ == "__main__":
             report_file.write("✅ Validation successful. All modules are compliant with the architecture.\n")
 
     # Print report content to GitHub Actions console
-    print("\n--- Generated IaC Compliance Report ---")
+    # print("\n--- Generated IaC Compliance Report ---")
+    # with open(report_path, "r") as report_file:
+    #     print(report_file.read())
+    # print("--- End of Report ---\n")
     with open(report_path, "r") as report_file:
-        print(report_file.read())
-    print("--- End of Report ---\n")
+    print("\n--- Terraform Compliance Report ---\n")
+    print(report_file.read())
+    print("\n--- End of Report ---\n")
+
     # --- End Report Generation ---
 
     # Set exit code based on validation result
