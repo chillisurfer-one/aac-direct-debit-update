@@ -127,11 +127,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up GitHub CLI
-      uses: cli/gh-action@v2
-      with:
-        token: ${{ secrets.PAT_REPO_WRITE }}
-
+    - name: Authenticate GitHub CLI
+      run: echo "${{ secrets.PAT_REPO_WRITE }}" | gh auth login --with-token
+    
     - name: Mark PR as Ready for Review
       run: |
         echo "Marking PR #${{ github.event.pull_request.number }} as ready for review..."
