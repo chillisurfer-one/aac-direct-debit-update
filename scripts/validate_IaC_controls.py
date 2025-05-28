@@ -630,6 +630,12 @@ if __name__ == "__main__":
 
     if not repo_url:
         print("Please provide a valid GitHub repository URL.")
+        sys.exit(1)
     else:
-        success = main(repo_url)
-        sys.exit(0 if success else 1)
+         success, has_deviations = main(repo_url)
+         if has_deviations:
+            #Exit with code 1 if deviations were found
+            sys.exit(1)
+        else:
+            #Exit with code 0 if no deviations were found
+            sys.exit(0)
