@@ -585,7 +585,7 @@ if __name__ == "__main__":
    # Print report content to GitHub Actions console
     print("\n--- Generated IaC Compliance Report ---")
     with open(report_path, "r") as report_file:
-    print(report_file.read())
+        print(report_file.read())
     print("--- End of Report ---\n")
 
 
