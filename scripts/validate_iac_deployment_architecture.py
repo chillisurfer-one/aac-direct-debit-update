@@ -36,6 +36,10 @@ OPENAI_API_TYPE="azure"
 #     report_file.write("Validation completed successfully ✅\n")
 # print(f"Report saved to: {report_path}")
 
+# Define the report output directory (absolute path based on script location)
+REPORT_OUTPUT_DIRECTORY = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "compliance- reports"
+)
 # Ensure the directory exists
 os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
 
