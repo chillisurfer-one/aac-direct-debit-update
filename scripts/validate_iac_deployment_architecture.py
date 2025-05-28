@@ -574,22 +574,31 @@ if __name__ == "__main__":
     # --- Report Generation ---
     report_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
     os.makedirs(report_dir, exist_ok=True)
-
     report_path = os.path.join(report_dir, "validate_iac_deployment_architecture_report.md")
-
     with open(report_path, "w") as report_file:
         report_file.write("# IaC Policy Compliance Report\n\n")
         if has_deviations:
             report_file.write("❌ Deviations found in Terraform modules vs deployment architecture.\n")
         else:
             report_file.write("✅ Validation successful. All modules are compliant with the architecture.\n")
-        print(f"Report saved to: {report_path}")
-    Print report content to GitHub Actions console
+    print(f"Report saved to: {report_path}")
+   # Print report content to GitHub Actions console
     print("\n--- Generated IaC Compliance Report ---")
     with open(report_path, "r") as report_file:
-        print(report_file.read())
+    print(report_file.read())
     print("--- End of Report ---\n")
-    
+
+
+    # # Define the report output directory
+# REPORT_OUTPUT_DIRECTORY = os.path.join(
+#     os.path.dirname(os.path.dirname(__file__)), "compliance-reports"
+# )
+# os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
+# report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
+# with open(report_path, "w") as report_file:
+#     report_file.write("# IaC Policy Compliance Report\n\n")
+#     report_file.write("Validation completed successfully ✅\n")
+# print(f"Report saved to: {report_path}")
     # with open(report_path, "r") as report_file:
     # print("\n--- Terraform Compliance Report ---\n")
     # print(report_file.read())
