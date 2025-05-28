@@ -23,17 +23,30 @@ OPENAI_API_TYPE="azure"
 # Hardcoded output directory for the report
 #REPORT_OUTPUT_DIRECTORY = r"C:\Users\TAMANNAJANGID\Desktop\Natwest POC\Task-2/report3"
 
-# Define the report output directory
-REPORT_OUTPUT_DIRECTORY = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "compliance-reports"
-)
+# # Define the report output directory
+# REPORT_OUTPUT_DIRECTORY = os.path.join(
+#     os.path.dirname(os.path.dirname(__file__)), "compliance-reports"
+# )
 
+# os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
+
+# report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
+# with open(report_path, "w") as report_file:
+#     report_file.write("# IaC Policy Compliance Report\n\n")
+#     report_file.write("Validation completed successfully ✅\n")
+# print(f"Report saved to: {report_path}")
+
+# Ensure the directory exists
 os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
 
+# Define the full report path within the repo
 report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
+
+# Write the report content
 with open(report_path, "w") as report_file:
     report_file.write("# IaC Policy Compliance Report\n\n")
     report_file.write("Validation completed successfully ✅\n")
+
 print(f"Report saved to: {report_path}")
 
 # end of update
