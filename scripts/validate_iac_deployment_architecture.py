@@ -25,8 +25,8 @@ OPENAI_API_TYPE="azure"
 # Hardcoded output directory for the report
 #REPORT_OUTPUT_DIRECTORY = r"C:\Users\TAMANNAJANGID\Desktop\Natwest POC\Task-2/report3"
 
-    REPORT_OUTPUT_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
-    os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
+REPORT_OUTPUT_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
+os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
 
 # # Define the report output directory
 # REPORT_OUTPUT_DIRECTORY = os.path.join(
