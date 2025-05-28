@@ -89,14 +89,6 @@ jobs:
         run: chmod +x scripts/validate_policy_architecture_compliance1.py
       - name: Run validation script
         run: python ./scripts/validate_policy_architecture_compliance1.py
-
-      - name: Debug:List compliance reports directory
-        run: |
-          echo "Listing contents of compliance reports directory:"
-          ls -l aac-direct-debit-update/compliance-reports/
-          echo "Full path(s) of markdown report(s):"
-          find aac-direct-debit-update/compliance-reports/ -name "policy_evaluation_report_*.md"
-      
       - name: Upload report artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -107,18 +99,18 @@ jobs:
     name: 🚀 Mark PR as Ready for Review
     runs-on: ubuntu-latest
     needs:
-    - check-adr
-    - check-control-yaml
+      - check-adr
+      - check-control-yaml
     #- validate-policy
     if: ${{ github.event.pull_request.draft == true && github.head_ref == 'develop' }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Authenticate GitHub CLI
-      run: echo "${{ secrets.PAT_REPO_WRITE }}" | gh auth login --with-token
-    
-    - name: Mark PR as Ready for Review
-      run: |
-        echo "Marking PR #${{ github.event.pull_request.number }} as ready for review..."
-        gh pr ready ${{ github.event.pull_request.number }} --repo ${{ github.repository }}
+      - name: Authenticate GitHub CLI
+        run: echo "${{ secrets.PAT_REPO_WRITE }}" | gh auth login --with-token
+
+      - name: Mark PR as Ready for Review
+        run: |
+          echo "Marking PR #${{ github.event.pull_request.number }} as ready for review..."
+          gh pr ready ${{ github.event.pull_request.number }} --repo ${{ github.repository }}
