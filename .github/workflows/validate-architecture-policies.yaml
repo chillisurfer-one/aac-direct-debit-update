@@ -1,0 +1,116 @@
+name: Validate architecture aligned to Policies
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - main
+    paths:
+      - architecture/**/*.puml
+  workflow_dispatch:
+jobs:
+  check-adr:
+    name: ✅ Check ADR Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exit if not draft or not from 'develop'
+        if: github.head_ref != 'develop' || github.event.pull_request.draft != true
+        run: |
+          echo "Skipping — either not from 'develop' or not a draft PR"
+          exit 0
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Check for ADR files
+        run: |
+          if ls adr/*.md 1> /dev/null 2>&1; then
+            echo "ADR files found."
+          else
+            echo "❌ No ADR files found in the adr/ directory."
+            exit 1
+          fi
+  check-control-yaml:
+    name: ✅ Validate Control YAML
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exit if not draft or not from 'develop'
+        if: github.head_ref != 'develop' || github.event.pull_request.draft != true
+        run: |
+          echo "Skipping — either not from 'develop' or not a draft PR"
+          exit 0
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install yq
+        run: >
+          wget
+          https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          -O yq
+
+          chmod +x yq
+
+          sudo mv yq /usr/local/bin/yq
+      - name: Confirm yq installation
+        run: yq --version
+      - name: Print YAML control titles
+        run: |
+          CONTROL_FILES=$(find ./controls -name '*-control.yaml')
+
+          if [ -z "$CONTROL_FILES" ]; then
+            echo "❌ No control YAML files found under ./controls"
+            exit 1
+          fi
+
+          printf "\n%-50s | %-50s\n" "Control File" "Title"
+          printf -- '%.0s-' {1..105}; echo
+
+          for FILE in $CONTROL_FILES; do
+            TITLE=$(yq '.title' "$FILE")
+            TITLE="${TITLE:-❌ No title found}"
+            printf "%-50s | %-50s\n" "$FILE" "$TITLE"
+          done
+  #Validating Policy code is commented for now, no wf will be triggered
+  validate-policy:
+    name: ✅ Policy-Architecture Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exit if not draft or not from 'develop'
+        if: github.head_ref != 'develop' || github.event.pull_request.draft != true
+        run: |
+          echo "Skipping — either not from 'develop' or not a draft PR"
+          exit 0
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Make script executable
+        run: chmod +x scripts/validate_policy_architecture_compliance1.py
+      - name: Run validation script
+        run: python ./scripts/validate_policy_architecture_compliance1.py
+      - name: Upload report artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: policy-evaluation-report
+          path: aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md
+  mark-ready:
+    name: 🚀 Mark PR as Ready for Review
+    runs-on: ubuntu-latest
+    needs:
+    - check-adr
+    - check-control-yaml
+    #- validate-policy
+    if: ${{ github.event.pull_request.draft == true && github.head_ref == 'develop' }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Authenticate GitHub CLI
+      run: echo "${{ secrets.PAT_REPO_WRITE }}" | gh auth login --with-token
+    
+    - name: Mark PR as Ready for Review
+      run: |
+        echo "Marking PR #${{ github.event.pull_request.number }} as ready for review..."
+        gh pr ready ${{ github.event.pull_request.number }} --repo ${{ github.repository }}

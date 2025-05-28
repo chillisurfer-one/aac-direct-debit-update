@@ -2,14 +2,14 @@
 
 !include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
 
-' === Styling ===
-skinparam backgroundColor #F9F9F9
+' === Styling ====
+skinparam backgroundColor #F9F9F
 skinparam defaultFontName "Consolas"
 skinparam ArrowColor #4A90E2
 skinparam componentStyle rectangle
 skinparam Shadowing true
 
-' === Legend ===
+' === Legend ====
 legend
 |= Color |= Meaning |
 | #LightBlue | External System |
