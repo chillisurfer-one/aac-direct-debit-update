@@ -636,6 +636,6 @@ if __name__ == "__main__":
          if has_deviations:
             #Exit with code 1 if deviations were found
             sys.exit(1)
-        else:
+         else:
             #Exit with code 0 if no deviations were found
             sys.exit(0)
