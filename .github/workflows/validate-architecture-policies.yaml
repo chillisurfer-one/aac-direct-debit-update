@@ -89,6 +89,14 @@ jobs:
         run: chmod +x scripts/validate_policy_architecture_compliance1.py
       - name: Run validation script
         run: python ./scripts/validate_policy_architecture_compliance1.py
+
+      - name: Debug:List compliance reports directory
+        run: |
+          echo "Listing contents of compliance reports directory:"
+          ls -l aac-direct-debit-update/compliance-reports/
+          echo "Full path(s) of markdown report(s):"
+          find aac-direct-debit-update/compliance-reports/ -name "policy_evaluation_report_*.md"
+      
       - name: Upload report artifacts
         if: always()
         uses: actions/upload-artifact@v4
