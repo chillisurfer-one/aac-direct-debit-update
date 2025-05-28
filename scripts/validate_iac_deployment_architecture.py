@@ -20,43 +20,21 @@ DEPLOYMENT_NAME="gpt-4o"
 OPENAI_API_VERSION="2023-09-01-preview"
 OPENAI_API_TYPE="azure"
 
-
-
 # Hardcoded output directory for the report
 #REPORT_OUTPUT_DIRECTORY = r"C:\Users\TAMANNAJANGID\Desktop\Natwest POC\Task-2/report3"
 
-REPORT_OUTPUT_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
+# Define the report output directory
+REPORT_OUTPUT_DIRECTORY = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "compliance-reports"
+)
+
 os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
 
-# # Define the report output directory
-# REPORT_OUTPUT_DIRECTORY = os.path.join(
-#     os.path.dirname(os.path.dirname(__file__)), "compliance-reports"
-# )
-
-# os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
-
-# report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
-# with open(report_path, "w") as report_file:
-#     report_file.write("# IaC Policy Compliance Report\n\n")
-#     report_file.write("Validation completed successfully ✅\n")
-# print(f"Report saved to: {report_path}")
-
-# # Define the report output directory (absolute path based on script location)
-# REPORT_OUTPUT_DIRECTORY = os.path.join(
-#     os.path.dirname(os.path.dirname(__file__)), "../compliance-reports"
-# )
-# # Ensure the directory exists
-# os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
-
-# # Define the full report path within the repo
-# report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
-
-# # Write the report content
-# with open(report_path, "w") as report_file:
-#     report_file.write("# IaC Policy Compliance Report\n\n")
-#     report_file.write("Validation completed successfully ✅\n")
-
-# print(f"Report saved to: {report_path}")
+report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
+with open(report_path, "w") as report_file:
+    report_file.write("# IaC Policy Compliance Report\n\n")
+    report_file.write("Validation completed successfully ✅\n")
+print(f"Report saved to: {report_path}")
 
 # end of update
 def clone_repo(repo_url, target_dir=None):
@@ -392,7 +370,7 @@ def generate_summary_report_tabular(results: Dict[str, Dict[str, Any]], puml_pat
         os.makedirs(REPORT_OUTPUT_DIRECTORY)
 
     puml_name = os.path.basename(puml_path).replace(".puml", "") if puml_path else "unknown"
-    report_filename = "validate_iac_deployment_architecture_report.md"
+    report_filename = "terraform_compliance_report.md"
     report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, report_filename)
     
     # Extract repo name from puml_path
@@ -577,43 +555,35 @@ if __name__ == "__main__":
     success, has_deviations = main(github_repo_url)
 
     # --- Report Generation ---
-    
-    # REPORT_OUTPUT_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
-    # os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
-    report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "validate_iac_deployment_architecture_report.md")
+    report_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
+    os.makedirs(report_dir, exist_ok=True)
+
+    report_path = os.path.join(report_dir, "validate_iac_deployment_architecture_report.md")
+
     with open(report_path, "w") as report_file:
         report_file.write("# IaC Policy Compliance Report\n\n")
         if has_deviations:
             report_file.write("❌ Deviations found in Terraform modules vs deployment architecture.\n")
         else:
             report_file.write("✅ Validation successful. All modules are compliant with the architecture.\n")
-    print(f"Report saved to: {report_path}")
-   # Print report content to GitHub Actions console
-    print("\n--- Generated IaC Compliance Report ---")
-    with open(report_path, "r") as report_file:
-        print(report_file.read())
-    print("--- End of Report ---\n")
 
-
-    # # Define the report output directory
-# REPORT_OUTPUT_DIRECTORY = os.path.join(
-#     os.path.dirname(os.path.dirname(__file__)), "compliance-reports"
-# )
-# os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
-# report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
-# with open(report_path, "w") as report_file:
-#     report_file.write("# IaC Policy Compliance Report\n\n")
-#     report_file.write("Validation completed successfully ✅\n")
-# print(f"Report saved to: {report_path}")
+    # Print report content to GitHub Actions console
+    # print("\n--- Generated IaC Compliance Report ---")
+    # with open(report_path, "r") as report_file:
+    #     print(report_file.read())
+    # print("--- End of Report ---\n")
+    
     # with open(report_path, "r") as report_file:
     # print("\n--- Terraform Compliance Report ---\n")
     # print(report_file.read())
     # print("\n--- End of Report ---\n")
 
-    
- 
+    print(f"::notice::📄 Report successfully generated at: {report_path}")
 
-
+    with open(report_path, "r") as report_file:
+        print("::group::🔍 Terraform Compliance Report")
+        print(report_file.read())
+        print("::endgroup::")
     # --- End Report Generation ---
 
     # Set exit code based on validation result
