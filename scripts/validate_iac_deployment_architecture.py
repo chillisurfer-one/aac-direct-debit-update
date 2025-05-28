@@ -20,8 +20,13 @@ DEPLOYMENT_NAME="gpt-4o"
 OPENAI_API_VERSION="2023-09-01-preview"
 OPENAI_API_TYPE="azure"
 
+
+
 # Hardcoded output directory for the report
 #REPORT_OUTPUT_DIRECTORY = r"C:\Users\TAMANNAJANGID\Desktop\Natwest POC\Task-2/report3"
+
+    REPORT_OUTPUT_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
+    os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
 
 # # Define the report output directory
 # REPORT_OUTPUT_DIRECTORY = os.path.join(
@@ -572,9 +577,10 @@ if __name__ == "__main__":
     success, has_deviations = main(github_repo_url)
 
     # --- Report Generation ---
-    report_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
-    os.makedirs(report_dir, exist_ok=True)
-    report_path = os.path.join(report_dir, "validate_iac_deployment_architecture_report.md")
+    
+    # REPORT_OUTPUT_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
+    # os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
+    report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "validate_iac_deployment_architecture_report.md")
     with open(report_path, "w") as report_file:
         report_file.write("# IaC Policy Compliance Report\n\n")
         if has_deviations:
