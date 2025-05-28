@@ -45,7 +45,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add compliance-reports/terraform_compliance_report.md
+          git add aac-direct-debit-update/compliance-reports/terraform_compliance_report.md
           git commit -m "Update Terraform deployment architecture compliance report" || echo "No changes to commit"
           git push
         env:
