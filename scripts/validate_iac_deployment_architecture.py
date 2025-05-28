@@ -36,22 +36,22 @@ OPENAI_API_TYPE="azure"
 #     report_file.write("Validation completed successfully ✅\n")
 # print(f"Report saved to: {report_path}")
 
-# Define the report output directory (absolute path based on script location)
-REPORT_OUTPUT_DIRECTORY = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "../compliance-reports"
-)
-# Ensure the directory exists
-os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
+# # Define the report output directory (absolute path based on script location)
+# REPORT_OUTPUT_DIRECTORY = os.path.join(
+#     os.path.dirname(os.path.dirname(__file__)), "../compliance-reports"
+# )
+# # Ensure the directory exists
+# os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
 
-# Define the full report path within the repo
-report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
+# # Define the full report path within the repo
+# report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
 
-# Write the report content
-with open(report_path, "w") as report_file:
-    report_file.write("# IaC Policy Compliance Report\n\n")
-    report_file.write("Validation completed successfully ✅\n")
+# # Write the report content
+# with open(report_path, "w") as report_file:
+#     report_file.write("# IaC Policy Compliance Report\n\n")
+#     report_file.write("Validation completed successfully ✅\n")
 
-print(f"Report saved to: {report_path}")
+# print(f"Report saved to: {report_path}")
 
 # end of update
 def clone_repo(repo_url, target_dir=None):
@@ -583,24 +583,22 @@ if __name__ == "__main__":
             report_file.write("❌ Deviations found in Terraform modules vs deployment architecture.\n")
         else:
             report_file.write("✅ Validation successful. All modules are compliant with the architecture.\n")
-
-    # Print report content to GitHub Actions console
-    # print("\n--- Generated IaC Compliance Report ---")
-    # with open(report_path, "r") as report_file:
-    #     print(report_file.read())
-    # print("--- End of Report ---\n")
+        print(f"Report saved to: {report_path}")
+    Print report content to GitHub Actions console
+    print("\n--- Generated IaC Compliance Report ---")
+    with open(report_path, "r") as report_file:
+        print(report_file.read())
+    print("--- End of Report ---\n")
     
     # with open(report_path, "r") as report_file:
     # print("\n--- Terraform Compliance Report ---\n")
     # print(report_file.read())
     # print("\n--- End of Report ---\n")
 
-    print(f"::notice::📄 Report successfully generated at: {report_path}")
+    
+ 
 
-    with open(report_path, "r") as report_file:
-        print("::group::🔍 Terraform Compliance Report")
-        print(report_file.read())
-        print("::endgroup::")
+
     # --- End Report Generation ---
 
     # Set exit code based on validation result
