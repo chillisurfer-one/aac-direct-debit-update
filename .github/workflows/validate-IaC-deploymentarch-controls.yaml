@@ -63,6 +63,7 @@ jobs:
         run: python ./scripts/validate_IaC_controls.py
 
       - name: Debug – List report files
+        if: always()
         run: ls -l aac-direct-debit-update/compliance-reports || echo "Directory not found"
 
       - name: Upload report artifacts
