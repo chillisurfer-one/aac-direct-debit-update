@@ -38,7 +38,7 @@ OPENAI_API_TYPE="azure"
 
 # Define the report output directory (absolute path based on script location)
 REPORT_OUTPUT_DIRECTORY = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "compliance- reports"
+    os.path.dirname(os.path.dirname(__file__)), "compliance-reports"
 )
 # Ensure the directory exists
 os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
