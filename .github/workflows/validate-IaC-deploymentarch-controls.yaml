@@ -89,6 +89,18 @@ jobs:
       - name: Run validation script
         run: python ./scripts/validate_IaC_controls.py
 
+      - name: 🐛 Debug – Print absolute path of generated report
+        if: always()
+        run: |
+          echo "Current working directory:"
+          pwd
+
+          echo "Full report path (if exists):"
+          find . -type f -name "IaC_control_analysis.md" -exec realpath {} \; || echo "Report not found"
+
+          echo "Directory tree around compliance-reports:"
+          tree -L 2 || ls -R
+
       - name: Debug – List report files
         if: always()
         run: ls -l aac-direct-debit-update/compliance-reports || echo "Directory not found"
