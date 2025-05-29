@@ -108,11 +108,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout develop  # 🔁 Explicitly switch to develop
+          git pull origin develop  # ⬇️ Ensure you have the latest changes
           git add aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md
           git commit -m "Update Architecture vs policy analysis report" || echo "No changes to commit"
-          git push
+          git push origin develop  # ⬆️ Push explicitly to develop
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         
   mark-ready:
     name: 🚀 Mark PR as Ready for Review
