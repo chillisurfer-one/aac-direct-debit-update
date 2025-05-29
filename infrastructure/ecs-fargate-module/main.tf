@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "app" {
     {
       name      = "app",
       image     = var.image,
-      portMappings = [{ containerPort = 8080, protocol = "tcp" }],
+      portMappings = [{ containerPort = 8443, protocol = "tcp" }],
       environment = var.environment
     }
   ])
@@ -55,8 +55,8 @@ resource "aws_lb" "this" {
 
 resource "aws_lb_target_group" "this" {
   name        = "${var.name_prefix}-tg"
-  port        = 8080
-  protocol    = "HTTP"
+  port        = 8443
+  protocol    = "HTTPS"
   vpc_id      = var.vpc_id
   target_type = "ip"
   health_check {
@@ -72,8 +72,8 @@ resource "aws_lb_target_group" "this" {
 
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.this.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
 
   default_action {
     type             = "forward"
@@ -97,7 +97,7 @@ resource "aws_ecs_service" "app" {
   load_balancer {
     target_group_arn = aws_lb_target_group.this.arn
     container_name   = "app"
-    container_port   = 8080
+    container_port   = 8443
   }
 
   tags = var.tags
