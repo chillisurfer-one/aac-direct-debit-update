@@ -38,7 +38,7 @@ System_Boundary(aws, "AWS Cloud") {
   }
 
   ' -- Database --
-  ContainerDb(AuditStore, "Audit Log", "Amazon RDS PostgreSQL", "Stores request/response logs and metadata") #Yellow
+  ContainerDb(AuditStore, "Audit Log", "Amazon RDS PostgreSQL", "Stores request/response logs and metadata") #Purple
 }
 
 ' === Relationships ===
