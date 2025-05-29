@@ -86,7 +86,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report-controls
-          path: aac-direct-debit-update/compliance-reports/IaC_control_analysis.md
+          path: compliance-reports/IaC_control_analysis.md
 
       - name: Commit and push report
         if: always()
