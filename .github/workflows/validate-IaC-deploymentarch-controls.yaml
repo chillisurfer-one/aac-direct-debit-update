@@ -109,7 +109,7 @@ jobs:
       - name: Download report from Job Validate-terraform-deploymentarch
         uses: actions/download-artifact@v4
         with:
-          name: terraform_compliance_report.md
+          name: policy-evaluation-report-deploymentarch
           path: compliance-reports/
 
       - name: Set up Python
