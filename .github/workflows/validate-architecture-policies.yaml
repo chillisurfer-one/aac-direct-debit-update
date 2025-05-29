@@ -104,7 +104,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report
-          path: compliance-reports/policy_evaluation_report_*.md
+          path: aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md
 
       - name: Commit and push report
         if: always()
@@ -114,7 +114,7 @@ jobs:
           git fetch origin Develop  # Fetch develop branch from remote
           git checkout Develop  # Switch to develop branch
           git pull origin Develop  # Pull latest changes from develop
-          git add compliance-reports/policy_evaluation_report_*.md  # Stage report file
+          git add aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md  # Stage report file
           git commit -m "Update Architecture vs policy analysis report" || echo "No changes to commit"  # Commit or skip if no changes
           git push origin Develop  # Push to remote develop branch
         env:
