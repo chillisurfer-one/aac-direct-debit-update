@@ -27,9 +27,9 @@ DEPLOYMENT_NAME="gpt-4o"
 OPENAI_API_VERSION="2023-09-01-preview"
 OPENAI_API_TYPE="azure"
 
-# updated
-REPORT_OUTPUT_DIRECTORY = os.path.join("aac-direct-debit-update", "compliance-reports")
-TIMESTAMP = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+# Define the report output directory
+REPORT_OUTPUT_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
+
 
 # Hardcoded output directory for the report
 #REPORT_OUTPUT_DIRECTORY = r"C:\Users\TAMANNAJANGID\Desktop\Natwest POC\Task-1" # Use your actual path
@@ -301,7 +301,8 @@ def generate_summary_report(results: dict, puml_path: str, no_policies_found: bo
         os.makedirs(REPORT_OUTPUT_DIRECTORY)
 
     puml_name = os.path.basename(puml_path).replace(".puml", "")
-    report_filename = f"policy_evaluation_report_{TIMESTAMP}.md"
+    #report_filename = f"policy_evaluation_report_{TIMESTAMP}.md"
+    report_filename = "policy_evaluation_report.md"
     report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, report_filename)
 
     with open(report_path, "w", encoding="utf-8") as f:
