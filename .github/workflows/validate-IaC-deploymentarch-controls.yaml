@@ -106,12 +106,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download report from Job Validate-terraform-deploymentarch
-        uses: actions/download-artifact@v4
-        with:
-          name: policy-evaluation-report-deploymentarch
-          path: compliance-reports/
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
