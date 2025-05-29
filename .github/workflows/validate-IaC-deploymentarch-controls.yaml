@@ -82,7 +82,7 @@ jobs:
     steps:
       - name: ⏱️ Wait for repository sync
         run: |
-          echo "Waiting 30 seconds to reduce push conflicts..."
+          echo "Waiting 30 seconds"
           sleep 30  # Wait for 30 seconds before starting this job
           
       - name: Checkout repository
