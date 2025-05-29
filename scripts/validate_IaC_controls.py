@@ -25,8 +25,11 @@ OPENAI_API_TYPE = "azure"
 # Hardcoded output directory for the report
 #REPORT_OUTPUT_DIRECTORY = r"C:\Users\TAMANNAJANGID\Desktop\Natwest POC\Task-4\result" # Ensure this path is correct
 
-# updated
-REPORT_OUTPUT_DIRECTORY = os.path.join("aac-direct-debit-update", "compliance-reports")
+# updated now
+#REPORT_OUTPUT_DIRECTORY = os.path.join("aac-direct-debit-update", "compliance-reports")
+
+# Define the report output directory
+REPORT_OUTPUT_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
 
 def clone_repo(repo_url, target_dir=None):
     """Clone a GitHub repository to a specified directory or a temporary directory"""
