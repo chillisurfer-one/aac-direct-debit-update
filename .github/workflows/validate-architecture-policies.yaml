@@ -85,16 +85,35 @@ jobs:
           python-version: "3.10"
       - name: Install dependencies
         run: pip install -r requirements.txt
+        
       - name: Make script executable
         run: chmod +x scripts/validate_policy_architecture_compliance1.py
+        
       - name: Run validation script
         run: python ./scripts/validate_policy_architecture_compliance1.py
+
+      - name: Debug – List report files
+        if: always()
+        run: ls -l aac-direct-debit-update/compliance-reports || echo "Listing file under compliance-report"
+        
       - name: Upload report artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report
           path: aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md
+
+      - name: Commit and push report
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md
+          git commit -m "Update Architecture vs policy analysis report" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
   mark-ready:
     name: 🚀 Mark PR as Ready for Review
     runs-on: ubuntu-latest
