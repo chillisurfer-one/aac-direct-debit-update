@@ -59,29 +59,6 @@ jobs:
           name: policy-evaluation-report-deploymentarch
           path: compliance-reports/terraform_compliance_report.md
 
-      # - name: Commit and push report
-      #   if: always()
-      #   run: |
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "github-actions[bot]@users.noreply.github.com"
-      #     git add compliance-reports/terraform_compliance_report.md
-      #     git commit -m "Update IaC deployment architecture compliance report" || echo "No changes to commit"
-      #     git push
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Commit and push report
-      #   if: always()
-      #   run: |
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "github-actions[bot]@users.noreply.github.com"
-      #     git pull --rebase origin ${{ github.head_ref }}
-      #     git add compliance-reports/terraform_compliance_report.md
-      #     git commit -m "Update IaC deployment architecture compliance report" || echo "No changes to commit"
-      #     git push origin ${{ github.head_ref }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Commit and push report
         if: always()
         run: |
@@ -101,8 +78,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: Validate-terraform-deploymentarch
     if: always()
-    
+
     steps:
+      - name: ⏱️ Wait for repository sync
+        run: |
+          echo "Waiting 30 seconds to reduce push conflicts..."
+          sleep 30  # Wait for 30 seconds before starting this job
+          
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -142,17 +124,6 @@ jobs:
         with:
           name: policy-evaluation-report-controls
           path: compliance-reports/IaC_control_analysis.md
-
-      # - name: Commit and push report
-      #   if: always()
-      #   run: |
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "github-actions[bot]@users.noreply.github.com"
-      #     git add compliance-reports/IaC_control_analysis.md
-      #     git commit -m "Update IaC controls compliance report" || echo "No changes to commit"
-      #     git push
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit and push report
         if: always()
