@@ -102,10 +102,10 @@ jobs:
           pwd
 
            echo "Check for policy_evaluation_report.md from current dir:"
-           find . -name "policy_evaluation_report_*.md" -print
+           find . -name "policy_evaluation_report.md" -print
 
           echo "Full report path (if exists):"
-          find . -type f -name "policy_evaluation_report_*.md" -exec realpath {} \; || echo "Report not found"
+          find . -type f -name "policy_evaluation_report.md" -exec realpath {} \; || echo "Report not found"
 
           echo "Directory tree around compliance-reports:"
           tree -L 2 || ls -R
@@ -120,14 +120,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report
-          path: compliance-reports/policy_evaluation_report_*.md
+          path: compliance-reports/policy_evaluation_report.md
 
       - name: Commit and push report
         if: always()
         run: |
           git config user.name "github-actions[bot]"  # Set Git username
           git config user.email "github-actions[bot]@users.noreply.github.com"  # Set Git email
-          git add compliance-reports/policy_evaluation_report_*.md  # Stage report file
+          git add compliance-reports/policy_evaluation_report.md  # Stage report file
           git commit -m "Update Architecture vs policy analysis report" || echo "No changes to commit"  # Commit or skip if no changes
           git push origin ${{ github.head_ref }} || echo "Push failed (possibly due to concurrent updates)"
         env:
