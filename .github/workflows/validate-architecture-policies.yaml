@@ -106,17 +106,18 @@ jobs:
       - name: Commit and push report
         if: always()
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout develop  # 🔁 Explicitly switch to develop
-          git pull origin develop  # ⬇️ Ensure you have the latest changes
-          git add aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md
-          git commit -m "Update Architecture vs policy analysis report" || echo "No changes to commit"
-          git push origin develop  # ⬆️ Push explicitly to develop
+          git config user.name "github-actions[bot]"  # Set Git username
+          git config user.email "github-actions[bot]@users.noreply.github.com"  # Set Git email
+          git fetch origin develop  # Fetch develop branch from remote
+          git checkout develop  # Switch to develop branch
+          git pull origin develop  # Pull latest changes from develop
+          git add aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md  # Stage report file
+          git commit -m "Update Architecture vs policy analysis report" || echo "No changes to commit"  # Commit or skip if no changes
+          git push origin develop  # Push to remote develop branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        
+      
   mark-ready:
     name: 🚀 Mark PR as Ready for Review
     runs-on: ubuntu-latest
