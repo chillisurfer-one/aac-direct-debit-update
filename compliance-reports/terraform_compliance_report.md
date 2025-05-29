@@ -40,12 +40,12 @@ The following table shows which components from the architecture diagram are map
 
 #### Remediation Steps:
 
-1. **Connection Implementation:**
-   - Ensure that the MandateUpdateService and VaultCoreClient are configured to send logs and metrics to the CloudWatch log group defined in Terraform.
-   - Verify that the ECS service is correctly set up to utilize the CloudWatch log group for logging and monitoring.
+1. **[Connection Implementation]:**
+   - Define explicit CloudWatch log stream resources for MandateUpdateService and VaultCoreClient in Terraform.
+   - Ensure that the ECS services are configured to send logs to the defined CloudWatch log groups.
 
-2. **Resource Alignment:**
-   - Consider adding explicit references or documentation in the Terraform code to clarify the relationship between the ECS services and the CloudWatch resources, ensuring alignment with the architecture diagram.
+2. **[Resource Alignment]:**
+   - Review the necessity of `aws_cloudwatch_metric_alarm` within the observability-module and ensure it aligns with the module's scope or update the diagram to reflect its presence.
 ---
 
 ### rds-secrets-module
@@ -54,18 +54,17 @@ The following table shows which components from the architecture diagram are map
 |----------------------------------------------------------|----------------------------------------------------------------|
 | Components Present in PUML Diagram and Terraform Code    | Secrets Manager, Audit Log (Amazon RDS PostgreSQL)              |
 | Components Present in PUML Diagram Not in Terraform Code | None                                                            |
-| Components Present in Terraform Code Not in PUML Diagram | aws_db_subnet_group.this                                        |
+| Components Present in Terraform Code Not in PUML Diagram | aws_db_subnet_group                                             |
 | Connection Discrepancies                                 | MandateUpdateController -> Secrets Manager connection not explicitly defined in Terraform code. |
 | Label/Annotation Discrepancies                           | None                                                            |
 
 #### Remediation Steps:
 
-1. **[Connection Definition]:**
-   - Ensure IAM roles and policies are defined in Terraform to allow MandateUpdateController to read secrets from Secrets Manager.
-   - Verify that the MandateUpdateService has the necessary permissions and configurations to write to the Audit Log (Amazon RDS PostgreSQL).
+1. **[Connection Discrepancies]:**
+   - Ensure that the IAM roles and policies are defined in the Terraform code to allow the MandateUpdateController to read secrets from Secrets Manager. This can be done by creating an IAM role with the necessary permissions and associating it with the ECS task definition for the MandateUpdateController.
 
-2. **[Subnet Group Documentation]:**
-   - Document the purpose and configuration of the `aws_db_subnet_group.this` resource to ensure it aligns with architectural best practices for subnet usage and security.
+2. **[Components Present in Terraform Code Not in PUML Diagram]:**
+   - Review the architecture diagram to determine if the `aws_db_subnet_group` should be included. If it is a necessary part of the architecture, update the diagram to reflect its presence. If it is not needed, consider removing it from the Terraform code if it does not serve a purpose.
 ---
 
 ### security-module
@@ -80,11 +79,17 @@ The following table shows which components from the architecture diagram are map
 
 #### Remediation Steps:
 
-1. **[Component Implementation]:**
-   - Add a resource for Amazon API Gateway in the Terraform code to match the architecture diagram.
+1. **Add Amazon API Gateway Resource:**
+   - Define an `aws_api_gateway_rest_api` resource in the Terraform code to represent the Amazon API Gateway component.
+   - Ensure the API Gateway is configured to route HTTP requests to the MandateUpdateController.
 
-2. **[Connection Implementation]:**
-   - Implement the connection between Amazon API Gateway and MandateUpdateController (Spring Boot) using an appropriate Terraform resource or module to define the HTTP route.
+2. **Implement Connection from API Gateway to ECS:**
+   - Create an `aws_api_gateway_integration` resource to establish the HTTP route from the API Gateway to the ECS service running the MandateUpdateController.
+   - Ensure the integration specifies the correct HTTP method and endpoint configuration.
+
+3. **Review Security Group Usage:**
+   - Verify if the security groups defined (ecs, alb, rds) are necessary for the security-module or if they should be part of another module.
+   - Adjust the security group configurations to align with the architectural requirements of the security-module, if applicable.
 ---
 
 ## Compliant Modules
