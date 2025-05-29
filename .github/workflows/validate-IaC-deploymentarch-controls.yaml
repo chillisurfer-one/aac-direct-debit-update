@@ -39,11 +39,11 @@ jobs:
           echo "Current working directory:"
           pwd
 
-           echo "Check for IaC_control_analysis.md from current dir:"
-           find . -name "IaC_control_analysis.md" -print
+           echo "Check for terraform_compliance_report.md from current dir:"
+           find . -name "terraform_compliance_report.md" -print
 
           echo "Full report path (if exists):"
-          find . -type f -name "IaC_control_analysis.md" -exec realpath {} \; || echo "Report not found"
+          find . -type f -name "terraform_compliance_report.md" -exec realpath {} \; || echo "Report not found"
 
           echo "Directory tree around compliance-reports:"
           tree -L 2 || ls -R
