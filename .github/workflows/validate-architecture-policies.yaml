@@ -79,6 +79,9 @@ jobs:
           exit 0
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure full repo history and all branches are available
+          
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -108,12 +111,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"  # Set Git username
           git config user.email "github-actions[bot]@users.noreply.github.com"  # Set Git email
-          git fetch origin develop  # Fetch develop branch from remote
-          git checkout develop  # Switch to develop branch
-          git pull origin develop  # Pull latest changes from develop
+          git fetch origin Develop  # Fetch develop branch from remote
+          git checkout Develop  # Switch to develop branch
+          git pull origin Develop  # Pull latest changes from develop
           git add aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md  # Stage report file
           git commit -m "Update Architecture vs policy analysis report" || echo "No changes to commit"  # Commit or skip if no changes
-          git push origin develop  # Push to remote develop branch
+          git push origin Develop  # Push to remote develop branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
