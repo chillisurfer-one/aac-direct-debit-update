@@ -127,16 +127,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"  # Set Git username
           git config user.email "github-actions[bot]@users.noreply.github.com"  # Set Git email
-          git fetch origin Develop  # Fetch develop branch from remote
-          git checkout Develop  # Switch to develop branch
-          git pull origin Develop  # Pull latest changes from develop
           git add compliance-reports/policy_evaluation_report_*.md  # Stage report file
           git commit -m "Update Architecture vs policy analysis report" || echo "No changes to commit"  # Commit or skip if no changes
-          git push origin Develop  # Push to remote develop branch
+          git push origin ${{ github.head_ref }} || echo "Push failed (possibly due to concurrent updates)"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      
+    
   mark-ready:
     name: 🚀 Mark PR as Ready for Review
     runs-on: ubuntu-latest
