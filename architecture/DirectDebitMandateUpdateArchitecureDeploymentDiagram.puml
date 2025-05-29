@@ -35,7 +35,7 @@ node "Thought Machine\nVault Core API" as ThoughtMachine #LightBlue
 
 ' === Relationships ===
 ClientApp --> ApiGateway : HTTPS / JSON
-ApiGateway --> WebAPI : HTTP Route
+ApiGateway --> WebAPI : HTTPS Route
 WebAPI --> ServiceLayer : Delegate Request
 ServiceLayer --> AdapterClient : External Call
 AdapterClient --> ThoughtMachine : HTTPS + OAuth2
