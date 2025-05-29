@@ -43,7 +43,7 @@ System_Boundary(aws, "AWS Cloud") {
 
 ' === Relationships ===
 Rel(ClientApp, ApiGateway, "Sends Direct Debit Update", "HTTPS / JSON")
-Rel(ApiGateway, WebAPI, "Forwards REST request", "HTTP")
+Rel(ApiGateway, WebAPI, "Forwards REST request", "HTTPS")
 
 Rel(WebAPI, ServiceLayer, "Invokes mandate update logic")
 Rel(ServiceLayer, AdapterClient, "Calls Vault Core API")
