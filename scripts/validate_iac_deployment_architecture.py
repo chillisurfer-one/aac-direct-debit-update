@@ -29,14 +29,7 @@ REPORT_OUTPUT_DIRECTORY = os.path.join(
 )
 
 os.makedirs(REPORT_OUTPUT_DIRECTORY, exist_ok=True)
-#just commented
-# report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, "terraform_compliance_report.md")
-# with open(report_path, "w") as report_file:
-#     report_file.write("# IaC Policy Compliance Report\n\n")
-#     report_file.write("Validation completed successfully ✅\n")
-# print(f"Report saved to: {report_path}")
 
-# end of update
 def clone_repo(repo_url, target_dir=None):
     """Clone a GitHub repository to a specified directory or a temporary directory"""
     if target_dir is None:
@@ -534,17 +527,6 @@ def main(github_repo_url):
             except Exception as e:
                 pass
 
-# if __name__ == "__main__":
-#     # Replace with your GitHub repository URL
-#     github_repo_url = "https://github.com/chillisurfer-one/aac-direct-debit-update"
-#     success, has_deviations = main(github_repo_url)
-
-#     if has_deviations:
-#         # Exit with code 1 if deviations were found
-#         sys.exit(1)
-#     else:
-#         # Exit with code 0 if no deviations were found
-#         sys.exit(0)
 
 if __name__ == "__main__":
     import os
@@ -553,27 +535,6 @@ if __name__ == "__main__":
     # Replace with your GitHub repository URL
     github_repo_url = "https://github.com/chillisurfer-one/aac-direct-debit-update"
     success, has_deviations = main(github_repo_url)
-
-    # # --- Report Generation ---
-    # report_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
-    # os.makedirs(report_dir, exist_ok=True)
-
-    # report_path = os.path.join(report_dir, "validate_iac_deployment_architecture_report.md")
-
-    # with open(report_path, "w") as report_file:
-    #     report_file.write("# IaC Policy Compliance Report\n\n")
-    #     if has_deviations:
-    #         report_file.write("❌ Deviations found in Terraform modules vs deployment architecture.\n")
-    #     else:
-    #         report_file.write("✅ Validation successful. All modules are compliant with the architecture.\n")
-
-    # print(f"::notice::📄 Report successfully generated at: {report_path}")
-
-    # with open(report_path, "r") as report_file:
-    #     print("::group::🔍 Terraform Compliance Report")
-    #     print(report_file.read())
-    #     print("::endgroup::")
-    # # --- End Report Generation ---
 
     # Set exit code based on validation result
     sys.exit(1 if has_deviations else 0)
