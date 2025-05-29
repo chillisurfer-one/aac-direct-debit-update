@@ -39,6 +39,9 @@ jobs:
           echo "Current working directory:"
           pwd
 
+           echo "Check for IaC_control_analysis.md from current dir:"
+           find . -name "IaC_control_analysis.md" -print
+
           echo "Full report path (if exists):"
           find . -type f -name "IaC_control_analysis.md" -exec realpath {} \; || echo "Report not found"
 
