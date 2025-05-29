@@ -70,15 +70,29 @@ jobs:
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # - name: Commit and push report
+      #   if: always()
+      #   run: |
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "github-actions[bot]@users.noreply.github.com"
+      #     git pull --rebase origin ${{ github.head_ref }}
+      #     git add compliance-reports/terraform_compliance_report.md
+      #     git commit -m "Update IaC deployment architecture compliance report" || echo "No changes to commit"
+      #     git push origin ${{ github.head_ref }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Commit and push report
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin ${{ github.head_ref }}
+
           git add compliance-reports/terraform_compliance_report.md
           git commit -m "Update IaC deployment architecture compliance report" || echo "No changes to commit"
-          git push origin ${{ github.head_ref }}
+    
+          # Push and ignore error if branch was updated concurrently
+          git push origin ${{ github.head_ref }} || echo "Push failed (possibly due to concurrent updates)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -145,13 +159,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin ${{ github.head_ref }}
+         
           git add compliance-reports/IaC_control_analysis.md
           git commit -m "Update IaC controls compliance report" || echo "No changes to commit"
-          git push origin ${{ github.head_ref }}
+          # Push and ignore error if branch was updated concurrently
+          git push origin ${{ github.head_ref }} || echo "Push failed (possibly due to concurrent updates)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+   
   mark-ready:
     name: 🚀 Mark PR as Ready for Review
     runs-on: ubuntu-latest
