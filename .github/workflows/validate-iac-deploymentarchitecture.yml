@@ -42,14 +42,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report
-          path: compliance-reports/validate_iac_deployment_architecture_report.md
+          path: compliance-reports/terraform_compliance_report.md
       
       - name: Commit and push report
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add compliance-reports/validate_iac_deployment_architecture_report.md
+          git add compliance-reports/terraform_compliance_report.md
           git commit -m "Update Terraform deployment architecture compliance report" || echo "No changes to commit"
           git push
         env:
