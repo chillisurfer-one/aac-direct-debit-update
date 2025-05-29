@@ -95,16 +95,32 @@ jobs:
       - name: Run validation script
         run: python ./scripts/validate_policy_architecture_compliance1.py
 
+      - name: 🐛 Debug – Print absolute path of generated report
+        if: always()
+        run: |
+          echo "Current working directory:"
+          pwd
+
+           echo "Check for policy_evaluation_report.md from current dir:"
+           find . -name "policy_evaluation_report_*.md" -print
+
+          echo "Full report path (if exists):"
+          find . -type f -name "policy_evaluation_report_*.md" -exec realpath {} \; || echo "Report not found"
+
+          echo "Directory tree around compliance-reports:"
+          tree -L 2 || ls -R
+
+
       - name: Debug – List report files
         if: always()
-        run: ls -l aac-direct-debit-update/compliance-reports || echo "Listing file under compliance-report"
+        run: ls -lR compliance-reports || echo "Listing file under compliance-report"
         
       - name: Upload report artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report
-          path: aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md
+          path: compliance-reports/policy_evaluation_report_*.md
 
       - name: Commit and push report
         if: always()
@@ -114,7 +130,7 @@ jobs:
           git fetch origin Develop  # Fetch develop branch from remote
           git checkout Develop  # Switch to develop branch
           git pull origin Develop  # Pull latest changes from develop
-          git add aac-direct-debit-update/compliance-reports/policy_evaluation_report_*.md  # Stage report file
+          git add compliance-reports/policy_evaluation_report_*.md  # Stage report file
           git commit -m "Update Architecture vs policy analysis report" || echo "No changes to commit"  # Commit or skip if no changes
           git push origin Develop  # Push to remote develop branch
         env:
