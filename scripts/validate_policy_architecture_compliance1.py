@@ -31,6 +31,9 @@ OPENAI_API_TYPE="azure"
 # REPORT_OUTPUT_DIRECTORY = os.path.join("aac-direct-debit-update", "compliance-reports")
 # TIMESTAMP = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
+# REPORT_OUTPUT_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
+
+# Define the report output directory
 REPORT_OUTPUT_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "compliance-reports")
 
 
