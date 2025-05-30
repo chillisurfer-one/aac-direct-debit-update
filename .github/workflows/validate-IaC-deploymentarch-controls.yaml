@@ -133,6 +133,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          TIMESTAMP=$(date +"%d%m%y-%H%M%S")
+
           # Pull latest changes and rebase to avoid merge conflicts
           # git pull --rebase origin ${{ github.head_ref }} || echo "Rebase failed but continuing"
 
@@ -149,17 +151,19 @@ jobs:
 
           # Stage both reports if they exist
           if [ -f compliance-reports/terraform_compliance_report.md ]; then
-            git add compliance-reports/terraform_compliance_report.md
+            mv compliance-reports/terraform_compliance_report.md compliance-reports/terraform_compliance_report_${TIMESTAMP}.md
+            git add compliance-reports/terraform_compliance_report_${TIMESTAMP}.md
           fi
           if [ -f compliance-reports/IaC_control_analysis.md ]; then
-            git add compliance-reports/IaC_control_analysis.md
+            mv compliance-reports/IaC_control_analysis.md compliance-reports/IaC_control_analysis_${TIMESTAMP}.md
+            git add compliance-reports/IaC_control_analysis_${TIMESTAMP}.md
           fi
 
           git commit -m "Update IaC compliance reports" || echo "No changes to commit"
 
           # Push changes to the current branch
           git push origin ${{ github.head_ref }} || echo "Push failed (possibly due to concurrent updates)"
-          env:
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
