@@ -131,7 +131,7 @@ jobs:
           TIMESTAMP=$(date +"%d%m%y-%H%M%S")
           
           echo "Full report paths (if exist):"
-          find . -type f -name "Architecture_Policy_Compliance_Report.md" -exec realpath {} \; || echo "terraform_compliance_report.md not found"
+          find . -type f -name "Architecture_Policy_Compliance_Report.md" -exec realpath {} \; || echo "Architecture_Policy_Compliance_Report.md not found"
           
           # Stage  report exist
           if [ -f compliance-reports/Architecture_Policy_Compliance_Report.md ]; then
