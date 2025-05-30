@@ -478,7 +478,7 @@ def generate_report(mapping_results: List[Dict[str, Any]],
     if not os.path.exists(REPORT_OUTPUT_DIRECTORY):
         os.makedirs(REPORT_OUTPUT_DIRECTORY)
     
-    report_filename = "IaC_control_analysis.md"
+    report_filename = "IaC_Control_Compliance_Report.md"
     report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, report_filename)
 
     with open(report_path, "w", encoding="utf-8") as f:
