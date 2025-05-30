@@ -39,11 +39,11 @@ jobs:
           echo "Current working directory:"
           pwd
 
-           echo "Check for terraform_compliance_report.md from current dir:"
-           find . -name "terraform_compliance_report.md" -print
+           echo "Check for IaC_DeploymentArchitecture_Compliance_Report.md from current dir:"
+           find . -name "IaC_DeploymentArchitecture_Compliance_Report.md" -print
 
           echo "Full report path (if exists):"
-          find . -type f -name "terraform_compliance_report.md" -exec realpath {} \; || echo "Report not found"
+          find . -type f -name "IaC_DeploymentArchitecture_Compliance_Report.md" -exec realpath {} \; || echo "Report not found"
 
           echo "Directory tree around compliance-reports:"
           tree -L 2 || ls -R
@@ -57,22 +57,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report-deploymentarch
-          path: compliance-reports/terraform_compliance_report.md
+          path: compliance-reports/IaC_DeploymentArchitecture_Compliance_Report.md
 
-      - name: Commit and push report
-        if: always()
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add compliance-reports/terraform_compliance_report.md
-          git commit -m "Update IaC deployment architecture compliance report" || echo "No changes to commit"
-    
-          # Push and ignore error if branch was updated concurrently
-          git push origin ${{ github.head_ref }} || echo "Push failed (possibly due to concurrent updates)"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+     
   Validate-terraform-Control:
     name: ✅ IaC-Controls Compliance
     runs-on: ubuntu-latest
@@ -80,11 +67,7 @@ jobs:
     if: always()
 
     steps:
-      - name: ⏱️ Wait for repository sync
-        run: |
-          echo "Waiting 30 seconds"
-          sleep 30  # Wait for 30 seconds before starting this job
-          
+        
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -102,6 +85,13 @@ jobs:
       - name: Run validation script
         run: python ./scripts/validate_IaC_controls.py
 
+      - name: Download architecture report artifact
+        if: always()
+        uses: actions/download-artifact@v4
+        with:
+          name: policy-evaluation-report-deploymentarch
+          path: compliance-reports
+
       - name: 🐛 Debug – Print absolute path of generated report
         if: always()
         run: |
@@ -109,7 +99,7 @@ jobs:
           pwd
 
           echo "Full report path (if exists):"
-          find . -type f -name "IaC_control_analysis.md" -exec realpath {} \; || echo "Report not found"
+          find . -type f -name "IaC_Control_Compliance_Report.md" -exec realpath {} \; || echo "Report not found"
 
           echo "Directory tree around compliance-reports:"
           tree -L 2 || ls -R
@@ -123,22 +113,43 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: policy-evaluation-report-controls
-          path: compliance-reports/IaC_control_analysis.md
+          path: compliance-reports/IaC_Control_Compliance_Report.md
 
-      - name: Commit and push report
+
+
+      - name: Commit and push reports
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-         
-          git add compliance-reports/IaC_control_analysis.md
-          git commit -m "Update IaC controls compliance report" || echo "No changes to commit"
-          # Push and ignore error if branch was updated concurrently
+
+          TIMESTAMP=$(date +"%d%m%y-%H%M%S")
+
+          echo "######Check for IaC_DeploymentArchitecture_Compliance_Report.md from current dir:#######"
+          find . -name "IaC_DeploymentArchitecture_Compliance_Report.md" -print
+          
+          echo "Full report paths (if exist):"
+          find . -type f -name "IaC_DeploymentArchitecture_Compliance_Report.md" -exec realpath {} \; || echo "IaC_DeploymentArchitecture_Compliance_Report.md not found"
+          find . -type f -name "IaC_Control_Compliance_Report.md" -exec realpath {} \; || echo "IaC_Control_Compliance_Report.md not found"
+
+          # Stage both reports if they exist
+          if [ -f compliance-reports/IaC_DeploymentArchitecture_Compliance_Report.md ]; then
+            mv compliance-reports/IaC_DeploymentArchitecture_Compliance_Report.md compliance-reports/IaC_DeploymentArchitecture_Compliance_Report_${TIMESTAMP}.md
+            git add compliance-reports/IaC_DeploymentArchitecture_Compliance_Report_${TIMESTAMP}.md
+          fi
+          if [ -f compliance-reports/IaC_Control_Compliance_Report.md ]; then
+            mv compliance-reports/IaC_Control_Compliance_Report.md compliance-reports/IaC_Control_Compliance_Report_${TIMESTAMP}.md
+            git add compliance-reports/IaC_Control_Compliance_Report_${TIMESTAMP}.md
+          fi
+
+          git commit -m "Update IaC compliance reports" || echo "No changes to commit"
+
+          # Push changes to the current branch
           git push origin ${{ github.head_ref }} || echo "Push failed (possibly due to concurrent updates)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-   
+
   mark-ready:
     name: 🚀 Mark PR as Ready for Review
     runs-on: ubuntu-latest
