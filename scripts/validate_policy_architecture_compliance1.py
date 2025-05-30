@@ -302,7 +302,7 @@ def generate_summary_report(results: dict, puml_path: str, no_policies_found: bo
 
     puml_name = os.path.basename(puml_path).replace(".puml", "")
     #report_filename = f"policy_evaluation_report_{TIMESTAMP}.md"
-    report_filename = "policy_evaluation_report.md"
+    report_filename = "Architecture_Policy_Compliance_Report.md"
     report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, report_filename)
 
     with open(report_path, "w", encoding="utf-8") as f:
