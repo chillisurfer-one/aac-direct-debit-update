@@ -1,7 +1,7 @@
 # Terraform Architecture Compliance Report
 
 **Architecture Diagram**: `DirectDebitMandateUpdateArchitecureDeploymentDiagram.puml`  
-**Date**: 2025-05-29  
+**Date**: 2025-05-30  
 ## Executive Summary
 
 This report evaluates the compliance of Terraform modules against the architecture diagram. Of the 4 modules evaluated, 1 is compliant and 3 require remediation.
@@ -34,19 +34,17 @@ The following table shows which components from the architecture diagram are map
 |----------------------------------------------------------|----------------------------------------------------------------|
 | Components Present in PUML Diagram and Terraform Code    | CloudWatch                                                     |
 | Components Present in PUML Diagram Not in Terraform Code | None                                                           |
-| Components Present in Terraform Code Not in PUML Diagram | aws_cloudwatch_metric_alarm                                    |
+| Components Present in Terraform Code Not in PUML Diagram | aws_cloudwatch_metric_alarm, aws_cloudwatch_log_group          |
 | Connection Discrepancies                                 | MandateUpdateService -> CloudWatch and VaultCoreClient -> CloudWatch connections are not explicitly defined in Terraform code. |
 | Label/Annotation Discrepancies                           | None                                                           |
 
 #### Remediation Steps:
 
-1. **[Connection Implementation]:**
-   - Define explicit IAM roles and policies in Terraform to allow MandateUpdateService and VaultCoreClient to send logs and metrics to CloudWatch.
-   - Ensure ECS task definitions include necessary permissions for logging to CloudWatch.
+1. **[Define Connections]:**
+   - Ensure that the connections from MandateUpdateService and VaultCoreClient to CloudWatch are explicitly defined in the Terraform code, possibly through IAM roles or policies that allow logging and metrics to be sent to CloudWatch.
 
-2. **[Resource Alignment]:**
-   - Review the necessity of `aws_cloudwatch_metric_alarm` in the context of the observability module and ensure it aligns with the architectural intent.
-   - If `aws_cloudwatch_metric_alarm` is required, update the architecture diagram to reflect its presence and role.
+2. **[Align Resources with Diagram]:**
+   - Review the architecture diagram to ensure that the resources such as `aws_cloudwatch_metric_alarm` and `aws_cloudwatch_log_group` are accurately represented or justified within the context of the observability module. If necessary, update the diagram to reflect these resources or adjust the Terraform code to align with the intended architecture.
 ---
 
 ### rds-secrets-module
@@ -61,13 +59,13 @@ The following table shows which components from the architecture diagram are map
 
 #### Remediation Steps:
 
-1. **Connection Definition:**
+1. **[Connection Definition]:**
    - Ensure IAM roles and policies are defined to allow MandateUpdateController to read secrets from Secrets Manager.
    - Verify that the MandateUpdateService has the necessary permissions and configurations to write to the Audit Log (Amazon RDS PostgreSQL).
 
-2. **Documentation and Code Alignment:**
-   - Update Terraform code to include explicit IAM role and policy definitions for the MandateUpdateController's access to Secrets Manager.
-   - Review and document the connection between MandateUpdateService and Audit Log in the Terraform code to ensure it matches the architecture diagram.
+2. **[Security Enhancements]:**
+   - Confirm that the RDS instance is deployed in private subnets and is not publicly accessible, as indicated in the Terraform code.
+   - Ensure that the security group associated with the RDS instance restricts access appropriately, allowing only necessary traffic.
 ---
 
 ### security-module
@@ -87,8 +85,8 @@ The following table shows which components from the architecture diagram are map
    - Ensure the API Gateway is configured to route requests to the MandateUpdateController (Spring Boot) component.
 
 2. **Implement Connection:**
-   - Establish the connection between the Amazon API Gateway and the MandateUpdateController using an `aws_api_gateway_integration` resource.
-   - Ensure the integration type is set to HTTPS and properly routes to the ECS Fargate service hosting the MandateUpdateController.
+   - Establish the connection between the Amazon API Gateway and the MandateUpdateController using Terraform resources such as `aws_api_gateway_integration` and `aws_api_gateway_method`.
+   - Ensure the connection uses HTTPS as specified in the architecture diagram.
 ---
 
 ## Compliant Modules
