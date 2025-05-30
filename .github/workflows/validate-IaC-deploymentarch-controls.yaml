@@ -85,6 +85,13 @@ jobs:
       - name: Run validation script
         run: python ./scripts/validate_IaC_controls.py
 
+      - name: Download architecture report artifact
+        if: always()
+        uses: actions/download-artifact@v4
+        with:
+          name: policy-evaluation-report-deploymentarch
+          path: compliance-reports
+
       - name: 🐛 Debug – Print absolute path of generated report
         if: always()
         run: |
