@@ -130,7 +130,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-         
+          # Pull latest changes and rebase to avoid merge commits
+          git pull --rebase origin ${{ github.head_ref }} || echo "Rebase failed but continuing"
+          echo "Current working directory:"
+          pwd
+          echo "Check for terraform_compliance_report.md from current dir:"
+          find . -name "terraform_compliance_report.md" -print
+          echo "Full report path (if exists):"
+          find . -type f -name "terraform_compliance_report.md" -exec realpath {} \; || echo "Report not found"
           git add compliance-reports/IaC_control_analysis.md
           git commit -m "Update IaC controls compliance report" || echo "No changes to commit"
           # Push and ignore error if branch was updated concurrently
