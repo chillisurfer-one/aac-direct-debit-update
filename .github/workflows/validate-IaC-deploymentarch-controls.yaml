@@ -118,6 +118,9 @@ jobs:
 
           TIMESTAMP=$(date +"%d%m%y-%H%M%S")
 
+          echo "######Check for IaC_DeploymentArchitecture_Compliance_Report.md from current dir:#######"
+          find . -name "IaC_DeploymentArchitecture_Compliance_Report.md" -print
+          
           echo "Full report paths (if exist):"
           find . -type f -name "IaC_DeploymentArchitecture_Compliance_Report.md" -exec realpath {} \; || echo "IaC_DeploymentArchitecture_Compliance_Report.md not found"
           find . -type f -name "IaC_Control_Compliance_Report.md" -exec realpath {} \; || echo "IaC_Control_Compliance_Report.md not found"
