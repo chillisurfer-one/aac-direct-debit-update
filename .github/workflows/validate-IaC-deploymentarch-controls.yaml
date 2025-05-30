@@ -59,19 +59,19 @@ jobs:
           name: policy-evaluation-report-deploymentarch
           path: compliance-reports/terraform_compliance_report.md
 
-      - name: Commit and push report
-        if: always()
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+      # - name: Commit and push report
+      #   if: always()
+      #   run: |
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add compliance-reports/terraform_compliance_report.md
-          git commit -m "Update IaC deployment architecture compliance report" || echo "No changes to commit"
+      #     git add compliance-reports/terraform_compliance_report.md
+      #     git commit -m "Update IaC deployment architecture compliance report" || echo "No changes to commit"
     
-          # Push and ignore error if branch was updated concurrently
-          git push origin ${{ github.head_ref }} || echo "Push failed (possibly due to concurrent updates)"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     # Push and ignore error if branch was updated concurrently
+      #     git push origin ${{ github.head_ref }} || echo "Push failed (possibly due to concurrent updates)"
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   Validate-terraform-Control:
     name: ✅ IaC-Controls Compliance
@@ -125,29 +125,45 @@ jobs:
           name: policy-evaluation-report-controls
           path: compliance-reports/IaC_control_analysis.md
 
-      - name: Commit and push report
+
+
+      - name: Commit and push reports
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # Pull latest changes and rebase to avoid merge commits
-          git pull --rebase origin ${{ github.head_ref }} || echo "Rebase failed but continuing"
+
+          # Pull latest changes and rebase to avoid merge conflicts
+          # git pull --rebase origin ${{ github.head_ref }} || echo "Rebase failed but continuing"
+
           echo "Current working directory:"
           pwd
-          echo "Check for terraform_compliance_report.md from current dir:"
-          find . -name "*.md" -print
-          echo "Full report path (if exists):"
-          find . -type f -name "terraform_compliance_report.md" -exec realpath {} \; || echo "Report not found"
-          echo "Full report path (if exists):"
-          find . -type f -name "IaC_control_analysis.md" -exec realpath {} \; || echo "Report not found"
-          git add compliance-reports/IaC_control_analysis.md
-          git commit -m "Update IaC controls compliance report" || echo "No changes to commit"
-          # Push and ignore error if branch was updated concurrently
+
+          echo "Check for all .md files:"
+          find . -name "terraform_compliance_report.md" -print
+          find . -name "IaC_control_analysis.md" -print
+
+          echo "Full report paths (if exist):"
+          find . -type f -name "terraform_compliance_report.md" -exec realpath {} \; || echo "terraform_compliance_report.md not found"
+          find . -type f -name "IaC_control_analysis.md" -exec realpath {} \; || echo "IaC_control_analysis.md not found"
+
+          # Stage both reports if they exist
+          if [ -f compliance-reports/terraform_compliance_report.md ]; then
+            git add compliance-reports/terraform_compliance_report.md
+          fi
+          if [ -f compliance-reports/IaC_control_analysis.md ]; then
+            git add compliance-reports/IaC_control_analysis.md
+          fi
+
+          git commit -m "Update IaC compliance reports" || echo "No changes to commit"
+
+          # Push changes to the current branch
           git push origin ${{ github.head_ref }} || echo "Push failed (possibly due to concurrent updates)"
-        env:
+          env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-   
+
+
   mark-ready:
     name: 🚀 Mark PR as Ready for Review
     runs-on: ubuntu-latest
