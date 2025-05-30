@@ -363,7 +363,7 @@ def generate_summary_report_tabular(results: Dict[str, Dict[str, Any]], puml_pat
         os.makedirs(REPORT_OUTPUT_DIRECTORY)
 
     puml_name = os.path.basename(puml_path).replace(".puml", "") if puml_path else "unknown"
-    report_filename = "IaC_DeploymentArchitecture_Compliance_report.md"
+    report_filename = "IaC_DeploymentArchitecture_Compliance_Report.md"
     report_path = os.path.join(REPORT_OUTPUT_DIRECTORY, report_filename)
     
     # Extract repo name from puml_path
