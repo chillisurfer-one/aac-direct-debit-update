@@ -7,4 +7,4 @@ This repository demonstrates Architecture as Code principles using a Java Spring
 - ?? **PlantUML** for architecture visualization (C4 model)
 - ?? **Policy as Code** for architecture design guard rails  
 - ?? **Controls as Code** for security, infrastructure and architecture controls on solution build
-- ?? **GitHub Actions** pipeline for continuous enforcement
+- ?? **GitHub Actions** pipeline for continuous enforcement leveraging Generative AI
